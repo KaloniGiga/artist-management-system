@@ -4,12 +4,10 @@ services:
     container_name: postgres-prod
     restart: always
     image: postgres:15-alpine
+    ports:
+      - 5432:5432
     env_file:
-      - ./apps/api/.env.development
-    #  environment:
-    #     POSTGRES_DB: ${POSTGRES_DB}
-    #     POSTGRES_USER: ${POSTGRES_USER}
-    #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - docker.env
     networks:
       - backend-network
     volumes:
