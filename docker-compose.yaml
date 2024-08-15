@@ -1,0 +1,62 @@
+services:
+  #Postgres database
+  postgres:
+    container_name: postgres-prod
+    restart: always
+    image: postgres:15-alpine
+    env_file:
+      - ./apps/api/.env.development
+    #  environment:
+    #     POSTGRES_DB: ${POSTGRES_DB}
+    #     POSTGRES_USER: ${POSTGRES_USER}
+    #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - backend-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  #backend api
+  backend:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+      target: development
+    volumes:
+      - .:/user/src/app
+    env_file:
+      - apps/api/.env.development
+    command: pnpm --filter api dev
+    ports:
+      - 4000:4000
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+
+    # frontend web
+  frontend:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      target: development
+    container_name: web
+    volumes:
+      - .:/user/src/app
+    env_file:
+      - apps/web/.env.local
+    command: pnpm --filter web dev
+    ports:
+      - 3000:3000
+    networks:
+      - frontend-network
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  backend-network:
+    driver: bridge
+  frontend-network:
+    driver: bridge
