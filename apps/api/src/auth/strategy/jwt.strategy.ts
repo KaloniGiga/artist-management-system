@@ -9,8 +9,8 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly configService: ConfigService,
     private readonly userService: UsersService,
+    private readonly configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           return request?.cookies?.accessToken;
         },
       ]),
-      secretOrKey: configService.get("JWT_SECRET"),
+      secretOrKey: configService.get("JWT_ACCESS_TOKEN_SECRET"),
     });
   }
 

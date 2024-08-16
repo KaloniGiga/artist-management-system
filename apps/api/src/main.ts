@@ -6,7 +6,7 @@ import { json, urlencoded } from "express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { config } from "dotenv";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
-import cookieParser from "cookie-parser";
+import * as cookieParser from "cookie-parser";
 
 config();
 async function bootstrap() {
