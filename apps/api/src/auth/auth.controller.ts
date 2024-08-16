@@ -5,10 +5,11 @@ import RegisterUserDto from "./dto/register-user.dto";
 import { LocalAuthenticationGuard } from "./guards/local.guard";
 import { RequestWithUser } from "./types/types";
 import JwtAuthenticationGuard from "./guards/jwt.guard";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import LoginUserDto from "./dto/login-user.dto";
 
 @ApiTags("Auth")
-@Controller({ version: "1", path: "authentication" })
+@Controller({ version: "1", path: "auth" })
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
@@ -22,6 +23,7 @@ export class AuthenticationController {
 
   @UseGuards(LocalAuthenticationGuard)
   @Post("log-in")
+  @ApiBody({ type: LoginUserDto })
   async logIn(@Req() request: RequestWithUser) {
     const { user } = request;
     const accessTokenCookie =
