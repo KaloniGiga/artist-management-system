@@ -6,6 +6,7 @@ import { json, urlencoded } from "express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { config } from "dotenv";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
+import cookieParser from "cookie-parser";
 
 config();
 async function bootstrap() {
@@ -22,6 +23,7 @@ async function bootstrap() {
 
   app.use(json({ limit: "50mb" }));
   app.use(urlencoded({ extended: true, limit: "50mb" }));
+  app.use(cookieParser());
 
   const clientUrl = configService.get("CLIENT_URL");
   app.enableCors({

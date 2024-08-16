@@ -2,12 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber } from "class-validator";
 
 class PaginationQueryDto {
-  @ApiProperty({ example: 0 })
+  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   page: number;
 
-  @ApiProperty({ example: 20 })
+  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   limit: number;

@@ -17,6 +17,8 @@ import { UsersModule } from "./users/users.module";
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number().port().default(4000),
+        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+        JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.number().required(),
       }),
     }),
     DatabaseModule.forRootAsync({
