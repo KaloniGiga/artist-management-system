@@ -3,16 +3,16 @@ import { config } from "dotenv";
 import { Knex } from "knex";
 import * as path from "path";
 
-config({ path: path.join(__dirname, `../../.env.development`) });
-
+config({
+  path: path.join(
+    __dirname,
+    `../../.env.${process.env.NODE_ENV || "development"}`,
+  ),
+});
 const configService = new ConfigService();
 
-console.log(
-  configService.get("POSTGRES_PASSWORD"),
-  process.env.POSTGRES_PASSWORD,
-);
 const knexConfig: Knex.Config = {
-  client: "postgresql",
+  client: "pg",
   connection: {
     host: configService.get("POSTGRES_HOST"),
     port: configService.get("POSTGRES_PORT"),

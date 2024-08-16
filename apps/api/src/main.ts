@@ -4,7 +4,9 @@ import { ConfigService } from "@nestjs/config";
 import { VersioningType } from "@nestjs/common";
 import { json, urlencoded } from "express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { config } from "dotenv";
 
+config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
