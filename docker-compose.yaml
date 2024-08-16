@@ -13,6 +13,21 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  # pg admin
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin:/root/.pgadmin
+    env_file:
+      - docker.env
+    networks:
+      - backend-network
+
   #backend api
   backend:
     container_name: api
@@ -52,6 +67,7 @@ services:
 volumes:
   postgres-data:
     driver: local
+  pgadmin:
 
 networks:
   backend-network:

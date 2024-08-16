@@ -26,7 +26,7 @@ async function bootstrap() {
 
   // Configure Swagger
   const config = new DocumentBuilder()
-    .setTitle("News Portal Backend API")
+    .setTitle("Artist Management System API")
     .setVersion("1.0")
     .build();
 

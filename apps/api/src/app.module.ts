@@ -7,6 +7,7 @@ import * as Joi from "joi";
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
