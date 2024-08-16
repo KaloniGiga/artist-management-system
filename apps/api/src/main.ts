@@ -1,16 +1,19 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
-import { VersioningType } from "@nestjs/common";
+import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { json, urlencoded } from "express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { config } from "dotenv";
+import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
 
 config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new ResponseInterceptor(app.get(Reflector)));
   // Enable api versioning
   app.enableVersioning({
     type: VersioningType.URI,
@@ -29,7 +32,10 @@ async function bootstrap() {
   // Configure Swagger
   const config = new DocumentBuilder()
     .setTitle("Artist Management System API")
+    .setDescription("This is the api docs for the artist management system")
     .setVersion("1.0")
+    .addTag("default")
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
