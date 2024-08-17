@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 import { GenreEnum } from "../types/types";
 
 class SongDto {
@@ -13,6 +19,11 @@ class SongDto {
   @IsEnum(GenreEnum)
   @IsNotEmpty()
   genre: GenreEnum;
+
+  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  authorId: number;
 }
 
 export default SongDto;

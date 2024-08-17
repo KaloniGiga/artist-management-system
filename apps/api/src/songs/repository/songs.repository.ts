@@ -9,13 +9,15 @@ import SongDto from "../dto/song.dto";
 class SongsRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async getAllSongs(page: number, limit: number) {
-    const databaseResponse = await this.databaseService.runQuery(
-      `SELECT * FROM songs LIMIT $1 OFFSET $2`,
-      [limit, limit * page],
+  async getSongsByArtistId(artistId: number, page: number, limit: number) {
+    const databaseRespoonse = await this.databaseService.runQuery(
+      `
+         SELECT * FROM songs WHERE artist_id=$1 LIMIT=$2 OFFSET=$3
+      `,
+      [artistId, limit, page * limit],
     );
 
-    return plainToInstance(SongModel, databaseResponse.rows);
+    return plainToInstance(SongModel, databaseRespoonse.rows);
   }
 
   async getSongById(id: number) {
@@ -30,10 +32,10 @@ class SongsRepository {
     return plainToInstance(SongModel, entity);
   }
 
-  async create(songData: SongDto) {
+  async create(songData: SongDto, artistId: number) {
     const databaseResponse = await this.databaseService.runQuery(
-      `INSERT INTO songs (title, album_name, genre) VALUES ($1, $2, $3) RETURNING *`,
-      [songData.title, songData.album_name, songData.genre],
+      `INSERT INTO songs (title, album_name, genre, artist_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+      [songData.title, songData.album_name, songData.genre, artistId],
     );
 
     return plainToInstance(SongDto, databaseResponse.rows[0]);

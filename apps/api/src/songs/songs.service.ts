@@ -6,9 +6,13 @@ import SongDto from "./dto/song.dto";
 class SongsService {
   constructor(private readonly songsRepository: SongsRepository) {}
 
-  async getAllSongs(page: number, limit: number) {
+  async getSongsByArtistId(artistId: number, page: number, limit: number) {
     try {
-      return await this.songsRepository.getAllSongs(page, limit);
+      return await this.songsRepository.getSongsByArtistId(
+        artistId,
+        page,
+        limit,
+      );
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
@@ -22,9 +26,9 @@ class SongsService {
     }
   }
 
-  async createSong(songData: SongDto) {
+  async createSong(songData: SongDto, artistId: number) {
     try {
-      return await this.songsRepository.create(songData);
+      return await this.songsRepository.create(songData, artistId);
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
