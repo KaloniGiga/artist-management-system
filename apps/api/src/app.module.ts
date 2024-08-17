@@ -6,6 +6,7 @@ import * as Joi from "joi";
 import { DatabaseModule } from "./database/database.module";
 import { UsersModule } from "./users/users.module";
 import { AuthenticationModule } from "./auth/auth.module";
+import { ArtistModule } from "./artists/artists.module";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthenticationModule } from "./auth/auth.module";
     }),
     UsersModule,
     AuthenticationModule,
+    ArtistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
