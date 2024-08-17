@@ -1,5 +1,6 @@
 import { Exclude, Expose } from "class-transformer";
-import { GenderEnum, RoleEnum } from "../types/types";
+import { RoleEnum } from "../types/types";
+import { GenderEnum } from "@server/common/types/types";
 
 class UserModel {
   id: number;

@@ -6,8 +6,9 @@ import {
   IsString,
   MinLength,
 } from "class-validator";
-import { GenderEnum, RoleEnum } from "../types/types";
+import { RoleEnum } from "../types/types";
 import { ApiProperty } from "@nestjs/swagger";
+import { GenderEnum } from "@server/common/types/types";
 
 class UserDto {
   @ApiProperty()
