@@ -12,7 +12,7 @@ class SongsRepository {
   async getSongsByArtistId(artistId: number, page: number, limit: number) {
     const databaseRespoonse = await this.databaseService.runQuery(
       `
-         SELECT * FROM songs WHERE artist_id=$1 LIMIT=$2 OFFSET=$3
+         SELECT * FROM songs WHERE artist_id=$1 LIMIT $2 OFFSET $3
       `,
       [artistId, limit, page * limit],
     );
@@ -38,6 +38,10 @@ class SongsRepository {
       [songData.title, songData.album_name, songData.genre, artistId],
     );
 
+    if (!databaseResponse.rows[0]) {
+      throw new NotFoundException();
+    }
+
     return plainToInstance(SongDto, databaseResponse.rows[0]);
   }
 
@@ -50,8 +54,8 @@ class SongsRepository {
     );
 
     const entity = databaseResponse.rows[0];
-    if (entity) {
-      return new NotFoundException();
+    if (!entity) {
+      throw new NotFoundException();
     }
 
     return plainToInstance(SongModel, entity);
@@ -64,7 +68,7 @@ class SongsRepository {
       [id],
     );
     if (databaseResponse.rowCount == 0) {
-      return new NotFoundException();
+      throw new NotFoundException();
     }
   }
 }
