@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from "joi";
 import { DatabaseModule } from "./database/database.module";
 import { UsersModule } from "./users/users.module";
+import { AuthenticationModule } from "./auth/auth.module";
+import { ArtistModule } from "./artists/artists.module";
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { UsersModule } from "./users/users.module";
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number().port().default(4000),
+        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+        JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.number().required(),
       }),
     }),
     DatabaseModule.forRootAsync({
@@ -31,6 +35,8 @@ import { UsersModule } from "./users/users.module";
       }),
     }),
     UsersModule,
+    AuthenticationModule,
+    ArtistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

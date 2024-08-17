@@ -22,6 +22,14 @@ class UsersService {
     }
   }
 
+  async getUserByEmail(email: string) {
+    try {
+      return this.usersRepository.getUserByEmail(email);
+    } catch (error) {
+      return new InternalServerErrorException();
+    }
+  }
+
   async createUser(userData: UserDto) {
     try {
       return this.usersRepository.create(userData);

@@ -28,6 +28,14 @@ class UsersRepository {
     return plainToInstance(UserModel, entity);
   }
 
+  async getUserByEmail(email: string) {
+    const databaseResponse = await this.databaseService.runQuery(
+      `SELECT * FROM users WHERE email=$1`,
+      [email],
+    );
+    return databaseResponse.rows[0];
+  }
+
   async create(userData: UserDto) {
     const databaseResponse = await this.databaseService.runQuery(
       `
