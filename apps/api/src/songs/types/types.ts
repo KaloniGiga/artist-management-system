@@ -1,5 +1,5 @@
 export enum GenreEnum {
-  MB = "mb",
+  RNB = "rnb",
   COUNTRY = "country",
   CLASSIC = "classic",
   ROCK = "rock",
