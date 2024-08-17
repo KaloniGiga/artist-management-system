@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import ArtistRepository from "./repository/artist.repository";
 import ArtistDto from "./dto/artist.dto";
 
@@ -18,7 +18,7 @@ class ArtistService {
     try {
       return await this.artistsRepository.getArtistsById(id);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -26,6 +26,7 @@ class ArtistService {
     try {
       return await this.artistsRepository.create(artistData);
     } catch (error) {
+      console.log(error);
       throw new HttpException(error.message, error.status);
     }
   }

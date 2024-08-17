@@ -1,12 +1,11 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from "joi";
 import { DatabaseModule } from "./database/database.module";
 import { UsersModule } from "./users/users.module";
 import { AuthenticationModule } from "./auth/auth.module";
 import { ArtistModule } from "./artists/artists.module";
+import { SongsModule } from "./songs/songs.module";
 
 @Module({
   imports: [
@@ -37,8 +36,9 @@ import { ArtistModule } from "./artists/artists.module";
     UsersModule,
     AuthenticationModule,
     ArtistModule,
+    SongsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

@@ -32,7 +32,7 @@ class ArtistRepository {
 
   async create(artistData: ArtistDto) {
     const databaseResponse = await this.databaseService.runQuery(
-      `INSERT INTO artists (name, dob, gender, address, first_release_data, no_of_albums_released) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      `INSERT INTO artists (name, dob, gender, address, first_release_year, no_of_albums_released) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [
         artistData.name,
         artistData.dob,
@@ -63,8 +63,8 @@ class ArtistRepository {
     );
 
     const entity = databaseResponse.rows[0];
-    if (entity) {
-      return new NotFoundException();
+    if (!entity) {
+      throw new NotFoundException();
     }
 
     return plainToInstance(ArtistModel, entity);
@@ -77,7 +77,7 @@ class ArtistRepository {
       [id],
     );
     if (databaseResponse.rowCount == 0) {
-      return new NotFoundException();
+      throw new NotFoundException();
     }
   }
 }

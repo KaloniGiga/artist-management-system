@@ -38,6 +38,7 @@ class ArtistDto {
   @IsNotEmpty()
   first_release_year: number;
 
+  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   no_of_albums_released: number;
