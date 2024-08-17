@@ -1,6 +1,5 @@
 import { Body, Req, Controller, Post, UseGuards, Get } from "@nestjs/common";
 import { AuthenticationService } from "./auth.service";
-import UsersService from "@server/users/users.service";
 import RegisterUserDto from "./dto/register-user.dto";
 import { LocalAuthenticationGuard } from "./guards/local.guard";
 import { RequestWithUser } from "./types/types";
@@ -8,13 +7,10 @@ import JwtAuthenticationGuard from "./guards/jwt.guard";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import LoginUserDto from "./dto/login-user.dto";
 
-@ApiTags("Auth")
+@ApiTags("Authentication")
 @Controller({ version: "1", path: "auth" })
 export class AuthenticationController {
-  constructor(
-    private readonly authenticationService: AuthenticationService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post("register")
   async register(@Body() registrationData: RegisterUserDto) {

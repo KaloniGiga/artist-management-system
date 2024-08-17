@@ -33,11 +33,7 @@ class UsersRepository {
       `SELECT * FROM users WHERE email=$1`,
       [email],
     );
-    const entity = databaseResponse.rows[0];
-    if (!entity) {
-      throw new NotFoundException();
-    }
-    return entity;
+    return databaseResponse.rows[0];
   }
 
   async create(userData: UserDto) {

@@ -1,10 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import UsersService from "@server/users/users.service";
 import RegisterUserDto from "./dto/register-user.dto";
 import * as bcrypt from "bcrypt";
 import { TokenPayload } from "./types/types";
+import { RoleEnum } from "@server/users/types/types";
 
 @Injectable()
 export class AuthenticationService {
@@ -15,8 +21,22 @@ export class AuthenticationService {
   ) {}
 
   public async register(registrationData: RegisterUserDto) {
-    const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
+      const emailExists = await this.usersService.getUserByEmail(
+        registrationData.email,
+      );
+      if (emailExists) {
+        throw new HttpException("Email already used.", HttpStatus.CONFLICT);
+      }
+
+      if (registrationData.role !== RoleEnum.SUPERADMIN) {
+        throw new HttpException(
+          "Only super admin can register.",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const hashedPassword = await this.hashPassword(registrationData.password);
       const createdUser = await this.usersService.createUser({
         ...registrationData,
         password: hashedPassword,
@@ -33,6 +53,9 @@ export class AuthenticationService {
   public async validateUser(email: string, plainTextPassword: string) {
     try {
       const user = await this.usersService.getUserByEmail(email);
+      if (!user) {
+        throw new NotFoundException();
+      }
       await this.verifyPassword(plainTextPassword, user.password);
       user.password = undefined;
       return user;
@@ -71,5 +94,9 @@ export class AuthenticationService {
 
   public getCookiesForLogOut() {
     return ["accessToken=; HttpOnly; Path=/; Max-Age=0"];
+  }
+
+  public async hashPassword(plainTextPassword: string) {
+    return await bcrypt.hash(plainTextPassword, 10);
   }
 }
