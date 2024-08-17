@@ -9,4 +9,4 @@ import SongsRepository from "./repository/songs.repository";
   providers: [SongsService, SongsRepository],
   exports: [SongsService],
 })
-export class ArtistModule {}
+export class SongsModule {}
