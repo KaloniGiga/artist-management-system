@@ -21,9 +21,13 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useRegisterUserFormContext } from "@web/context/register-form.context";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
+    first_name: z.string().min(1, { message: "First name is required" }),
+    last_name: z.string().min(1, { message: "Last name is required" }),
     email: z
       .string()
       .min(1, { message: "Email is required" })
@@ -45,10 +49,14 @@ const formSchema = z
     },
   );
 
-export default function RegisterForm() {
+export default function RegisterFormStep1() {
+  const router = useRouter();
+  const formContext = useRegisterUserFormContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      first_name: "",
+      last_name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -57,6 +65,8 @@ export default function RegisterForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    formContext.updateUser(values);
+    router.push("/register/step-2");
   };
 
   return (
@@ -70,6 +80,46 @@ export default function RegisterForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="grid gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="first_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-md">First name</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
+                          placeholder="brown"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-md">Last name</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
+                          placeholder="brown"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
             <FormField
               control={form.control}
               name="email"
@@ -78,7 +128,7 @@ export default function RegisterForm() {
                   <FormLabel className="text-md">Enter your email</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-12 text-md border-foreground border-opacity-0 focus-visible:border-none"
+                      className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                       placeholder="simon234@gmail.com"
                       {...field}
                     />
@@ -96,7 +146,7 @@ export default function RegisterForm() {
                   <FormLabel className="text-md">Enter Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-12 text-md border-foreground focus-visible:border-none"
+                      className="h-10 text-md border-foreground focus-visible:border-none"
                       type="password"
                       placeholder="password"
                       {...field}
@@ -115,7 +165,7 @@ export default function RegisterForm() {
                   <FormLabel className="text-md">Confirm Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-12 text-md border-foreground focus-visible:border-none"
+                      className="h-10 text-md border-foreground focus-visible:border-none"
                       type="password"
                       placeholder="Confirm Password"
                       {...field}
@@ -129,13 +179,13 @@ export default function RegisterForm() {
 
           <CardFooter className="w-full flex flex-col space-y-3">
             <Button size={"lg"} type="submit" className="w-full text-md">
-              {"Sign up"}
+              {"Next"}
             </Button>
 
             <div className="mt-4 text-center text-sm">
               {"Already have an account?"}
               <Link href={"/"} className="underline text-ring">
-                {"Sign up"}
+                {"Login"}
               </Link>
             </div>
           </CardFooter>

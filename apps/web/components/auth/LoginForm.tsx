@@ -64,7 +64,7 @@ export default function LoginForm() {
                   <FormLabel className="text-md">Enter your email</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-12 text-md border-foreground border-opacity-0 focus-visible:border-none"
+                      className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                       placeholder="simon234@gmail.com"
                       {...field}
                     />
@@ -82,7 +82,7 @@ export default function LoginForm() {
                   <FormLabel className="text-md">Enter Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-12 text-md border-foreground focus-visible:border-none"
+                      className="h-10 text-md border-foreground focus-visible:border-none"
                       type="password"
                       placeholder="password"
                       {...field}
@@ -101,7 +101,7 @@ export default function LoginForm() {
 
             <div className="mt-4 text-center text-sm">
               {"Don't have an account?"}{" "}
-              <Link href="/register" className="underline text-ring">
+              <Link href="/register/step-1" className="underline text-ring">
                 {"Sign up"}
               </Link>
             </div>
