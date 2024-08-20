@@ -47,7 +47,50 @@ export function UserPage() {
       gender: GenderEnum.MALE,
       role_type: RoleEnum.SUPERADMIN,
     },
+    {
+      id: 7,
+      first_name: "dipak",
+      last_name: "kalauni",
+      gender: GenderEnum.MALE,
+      role_type: RoleEnum.SUPERADMIN,
+    },
+    {
+      id: 8,
+      first_name: "dipak",
+      last_name: "kalauni",
+      gender: GenderEnum.MALE,
+      role_type: RoleEnum.SUPERADMIN,
+    },
+    {
+      id: 9,
+      first_name: "dipak",
+      last_name: "kalauni",
+      gender: GenderEnum.MALE,
+      role_type: RoleEnum.SUPERADMIN,
+    },
+    {
+      id: 10,
+      first_name: "dipak",
+      last_name: "kalauni",
+      gender: GenderEnum.MALE,
+      role_type: RoleEnum.SUPERADMIN,
+    },
+    {
+      id: 11,
+      first_name: "dipak",
+      last_name: "kalauni",
+      gender: GenderEnum.MALE,
+      role_type: RoleEnum.SUPERADMIN,
+    },
   ];
 
-  return <TableLayout data={data} columns={userColumns} />;
+  return (
+    <TableLayout
+      title={"Users List"}
+      description={""}
+      onClickAdd={() => console.log("add clicked")}
+      data={data}
+      columns={userColumns}
+    />
+  );
 }
