@@ -1,3 +1,9 @@
+import { UserPage } from "@web/components/dashboard/users/UserPage";
+
 export default function Home() {
-  return <div>Hello world</div>;
+  return (
+    <div>
+      <UserPage />
+    </div>
+  );
 }

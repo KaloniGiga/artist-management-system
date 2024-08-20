@@ -2,7 +2,6 @@ import { Button } from "@web/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@web/components/ui/sheet";
 import { Menu, Music } from "lucide-react";
 import Link from "next/link";
-import { UserDropdown } from "./UserDropdown";
 
 export function MobileMenu() {
   return (
@@ -30,7 +29,6 @@ export function MobileMenu() {
             Artists
           </Link>
         </nav>
-        <UserDropdown />
       </SheetContent>
     </Sheet>
   );

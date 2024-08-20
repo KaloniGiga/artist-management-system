@@ -1,4 +1,4 @@
-export type User = {
+export interface User {
   first_name?: string;
   last_name?: string;
   email?: string;
@@ -7,7 +7,11 @@ export type User = {
   gender?: GenderEnum;
   role_type?: RoleEnum;
   address?: string;
-};
+}
+
+export interface UserData extends User {
+  id: number;
+}
 
 // "This will allow you to update the state within the context whenever you need to."
 export interface UserContextProps {
