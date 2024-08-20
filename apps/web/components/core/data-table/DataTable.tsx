@@ -35,7 +35,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <Table>
-        <TableHeader>
+        <TableHeader className="z-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
