@@ -26,6 +26,17 @@ export interface AritstData extends Artist {
   id: number;
 }
 
+export interface Song {
+  title: string;
+  album_name: string;
+  genre: GenreEnum;
+  authorId?: number;
+}
+
+export interface SongData extends Song {
+  id: number;
+}
+
 // "This will allow you to update the state within the context whenever you need to."
 export interface UserContextProps {
   user: User | null;
@@ -42,4 +53,12 @@ export enum RoleEnum {
   SUPERADMIN = "super_admin",
   ARTISTMANAGER = "artist_manager",
   ARTIST = "artist",
+}
+
+export enum GenreEnum {
+  RNB = "rnb",
+  ROCK = "rock",
+  CLASSIC = "classic",
+  COUNTRY = "country",
+  JAZZ = "jazz",
 }
