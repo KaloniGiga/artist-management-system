@@ -3,6 +3,10 @@ import { TableLayout } from "@web/components/core/data-table/TableLayout";
 import { GenreEnum } from "@web/types/types";
 import { songColumns } from "./SongColumns";
 import { usePathname } from "next/navigation";
+import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
+import { Button } from "@web/components/ui/button";
+import AddEditSongDialog from "../dialogs/AddEditSongDialog";
+import { PlusCircle } from "lucide-react";
 
 export function SongPage() {
   const pathname = usePathname();
@@ -47,6 +51,16 @@ export function SongPage() {
       onClickAdd={() => console.log("add clicked")}
       data={data}
       columns={songColumns}
-    />
+    >
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button size="sm" className="ml-auto gap-1">
+            Add
+            <PlusCircle className="h-4 w-4" />
+          </Button>
+        </DialogTrigger>
+        <AddEditSongDialog isEdit={false} editData={null} />
+      </Dialog>
+    </TableLayout>
   );
 }

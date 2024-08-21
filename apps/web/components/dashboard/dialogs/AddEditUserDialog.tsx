@@ -241,7 +241,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
           />
 
           <Button size={"lg"} type="submit" className="w-full text-md">
-            {"Next"}
+            {"Submit"}
           </Button>
         </form>
       </Form>

@@ -1,7 +1,7 @@
 "use client";
 import { SongData } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
+import { EditDeleteSongOptions } from "./EditDeleteSongOption";
 
 export const songColumns: ColumnDef<SongData>[] = [
   {
@@ -23,9 +23,9 @@ export const songColumns: ColumnDef<SongData>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const user = row.original;
+      const song = row.original;
 
-      return <ActionDropdown rowDataId={user.id} />;
+      return <EditDeleteSongOptions rowData={song} />;
     },
   },
 ];
