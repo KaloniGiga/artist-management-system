@@ -4,16 +4,29 @@ services:
     container_name: postgres-prod
     restart: always
     image: postgres:15-alpine
+    ports:
+      - 5432:5432
     env_file:
-      - ./apps/api/.env.development
-    #  environment:
-    #     POSTGRES_DB: ${POSTGRES_DB}
-    #     POSTGRES_USER: ${POSTGRES_USER}
-    #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - docker.env
     networks:
       - backend-network
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
+  # pg admin
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin:/root/.pgadmin
+    env_file:
+      - docker.env
+    networks:
+      - backend-network
 
   #backend api
   backend:
@@ -54,6 +67,7 @@ services:
 volumes:
   postgres-data:
     driver: local
+  pgadmin:
 
 networks:
   backend-network:
