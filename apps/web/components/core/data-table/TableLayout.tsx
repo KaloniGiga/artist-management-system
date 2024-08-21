@@ -1,5 +1,4 @@
 "use client";
-import { PlusCircle } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -7,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../../ui/card";
-import { Button } from "../../ui/button";
 import { DataTable } from "./DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -19,6 +17,7 @@ interface DataTableProps<TData, TValue> {
 interface ITableMetaData {
   title: string;
   description: string;
+  children: React.ReactNode;
   onClickAdd: () => void;
 }
 
@@ -27,7 +26,7 @@ type TableLayoutProps<TData, TValue> = DataTableProps<TData, TValue> &
 export function TableLayout<TData, TValue>({
   title,
   description,
-  onClickAdd,
+  children,
   columns,
   data,
 }: TableLayoutProps<TData, TValue>) {
@@ -39,10 +38,7 @@ export function TableLayout<TData, TValue>({
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </div>
-          <Button size="sm" className="ml-auto gap-1" onClick={onClickAdd}>
-            Add
-            <PlusCircle className="h-4 w-4" />
-          </Button>
+          {children}
         </CardHeader>
         <CardContent>
           <DataTable data={data} columns={columns} />
