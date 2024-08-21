@@ -5,7 +5,7 @@ import { GenderEnum, RoleEnum } from "@web/types/types";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { Button } from "@web/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import AddEditUserDialog from "../dialogs/AddEditUserDialog";
+import { AddEditUserDialog } from "../dialogs/AddEditUserDialog";
 
 export function UserPage() {
   const data = [
@@ -90,8 +90,10 @@ export function UserPage() {
 
   return (
     <TableLayout
-      title={"Users List"}
-      description={""}
+      title={"List of Users"}
+      description={
+        "The User Table stores information about all users who have access to the Artist Management System"
+      }
       onClickAdd={() => console.log("add clicked")}
       data={data}
       columns={userColumns}

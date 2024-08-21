@@ -5,8 +5,8 @@ import { songColumns } from "./SongColumns";
 import { usePathname } from "next/navigation";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { Button } from "@web/components/ui/button";
-import AddEditSongDialog from "../dialogs/AddEditSongDialog";
 import { PlusCircle } from "lucide-react";
+import { AddEditSongDialog } from "../dialogs/AddEditSongDialog";
 
 export function SongPage() {
   const pathname = usePathname();
@@ -47,7 +47,7 @@ export function SongPage() {
   return (
     <TableLayout
       title={"Songs List"}
-      description={""}
+      description={"This table contains the list of songs of artist."}
       onClickAdd={() => console.log("add clicked")}
       data={data}
       columns={songColumns}

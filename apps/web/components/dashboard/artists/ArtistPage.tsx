@@ -27,8 +27,8 @@ export function ArtistPage() {
 
   return (
     <TableLayout
-      title={"Artist"}
-      description={""}
+      title={"Artist Table"}
+      description={"This table contains list of all the aritst"}
       onClickAdd={() => console.log("add clicked")}
       data={data}
       columns={artistColumns}
