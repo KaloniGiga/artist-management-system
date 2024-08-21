@@ -124,5 +124,3 @@ export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
     </DialogContent>
   );
 }
-
-export default AddEditSongDialog;

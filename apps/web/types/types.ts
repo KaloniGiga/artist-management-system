@@ -22,7 +22,7 @@ export interface Artist {
   no_of_albums_released: number;
 }
 
-export interface AritstData extends Artist {
+export interface ArtistData extends Artist {
   id: number;
 }
 

@@ -1,9 +1,9 @@
 "use client";
-import { AritstData } from "@web/types/types";
+import { ArtistData } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
+import { EditDeleteArtistOptions } from "./EditDeleteArtistOptions";
 
-export const artistColumns: ColumnDef<AritstData>[] = [
+export const artistColumns: ColumnDef<ArtistData>[] = [
   {
     accessorKey: "id",
     header: "Id",
@@ -27,9 +27,9 @@ export const artistColumns: ColumnDef<AritstData>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const user = row.original;
+      const artist = row.original;
 
-      return <ActionDropdown rowDataId={user.id} />;
+      return <EditDeleteArtistOptions rowData={artist} />;
     },
   },
 ];

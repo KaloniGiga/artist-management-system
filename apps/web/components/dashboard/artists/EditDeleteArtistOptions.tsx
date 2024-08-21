@@ -2,13 +2,13 @@
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
 import { useState } from "react";
 import DeleteDialog from "../dialogs/DeleteDialog";
-import { UserData } from "@web/types/types";
-import { AddEditUserDialog } from "../dialogs/AddEditUserDialog";
+import { AddEditArtistDialog } from "../dialogs/AddEditArtistDialog";
+import { ArtistData } from "../../../types/types";
 
-interface IEditDeleteUserOptions {
-  rowData: UserData;
+interface IEditDeleteArtistOptions {
+  rowData: ArtistData;
 }
-export function EditDeleteUserOptions({ rowData }: IEditDeleteUserOptions) {
+export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
   const [open, setOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
   return (
@@ -17,10 +17,12 @@ export function EditDeleteUserOptions({ rowData }: IEditDeleteUserOptions) {
       setOpen={setOpen}
       setIsDeleteClicked={setIsDeleteClicked}
     >
-      {!isDeleteClicked && <AddEditUserDialog isEdit={false} editData={null} />}
+      {!isDeleteClicked && (
+        <AddEditArtistDialog isEdit={false} editData={null} />
+      )}
       {isDeleteClicked && (
         <DeleteDialog
-          titleKey={"user"}
+          titleKey={"artist"}
           handleCancelDelete={() => console.log("well")}
           handleConfirmDelete={() => console.log("well")}
         />
