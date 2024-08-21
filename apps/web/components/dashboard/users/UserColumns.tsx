@@ -1,7 +1,7 @@
 "use client";
 import { UserData } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
+import { EditDeleteUserOptions } from "./EditDeleteUserOptions";
 
 export const userColumns: ColumnDef<UserData>[] = [
   {
@@ -29,7 +29,7 @@ export const userColumns: ColumnDef<UserData>[] = [
     cell: ({ row }) => {
       const user = row.original;
 
-      return <ActionDropdown rowDataId={user.id} />;
+      return <EditDeleteUserOptions rowData={user} />;
     },
   },
 ];

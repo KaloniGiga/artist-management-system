@@ -25,7 +25,6 @@ import { z } from "zod";
 type IAddEditUser = {
   isEdit: boolean;
   editData: UserData | null;
-  handleDialogClose: () => void;
 };
 
 const formSchema = z.object({
@@ -51,11 +50,7 @@ const formSchema = z.object({
   address: z.string(),
 });
 
-export function AddEditUserDialog({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: IAddEditUser) {
+export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -103,11 +103,7 @@ export function UserPage() {
             <PlusCircle className="h-4 w-4" />
           </Button>
         </DialogTrigger>
-        <AddEditUserDialog
-          isEdit={false}
-          editData={null}
-          handleDialogClose={() => console.log("dialog close")}
-        />
+        <AddEditUserDialog isEdit={false} editData={null} />
       </Dialog>
     </TableLayout>
   );
