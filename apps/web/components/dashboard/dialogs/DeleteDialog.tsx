@@ -12,12 +12,14 @@ interface IDeleteDialog {
   titleKey: string;
   handleConfirmDelete: () => void;
   handleCancelDelete: () => void;
+  loading: boolean;
 }
 
 export function DeleteDialog({
   handleConfirmDelete,
   handleCancelDelete,
   titleKey,
+  loading,
 }: IDeleteDialog) {
   return (
     <DialogContent>
@@ -28,10 +30,16 @@ export function DeleteDialog({
         </DialogDescription>
       </DialogHeader>
       <div className="flex justify-end gap-4">
-        <Button onClick={handleCancelDelete} variant={"outline"}>
+        <Button
+          disabled={loading}
+          onClick={handleCancelDelete}
+          variant={"outline"}
+        >
           Cancel
         </Button>
-        <Button onClick={handleConfirmDelete}>Confirm</Button>
+        <Button disabled={loading} onClick={handleConfirmDelete}>
+          Confirm
+        </Button>
       </div>
     </DialogContent>
   );

@@ -1,13 +1,13 @@
 export interface User {
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  phone?: string;
-  password?: string;
-  dob?: Date;
-  gender?: GenderEnum;
-  role_type?: RoleEnum;
-  address?: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  password: string;
+  dob: Date;
+  gender: GenderEnum;
+  role_type: RoleEnum;
+  address: string;
 }
 
 export interface UserData extends User {
@@ -16,9 +16,9 @@ export interface UserData extends User {
 
 export interface Artist {
   name: string;
-  dob?: Date;
+  dob: Date;
   gender: GenderEnum;
-  address?: string;
+  address: string;
   first_release_year: number;
   no_of_albums_released: number;
 }

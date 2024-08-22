@@ -34,13 +34,15 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    getUsers: builder.query<UserQueryResponse, void>({
-      query: () => ({
-        url: "v1/users",
-        method: "GET",
-      }),
-      providesTags: ["User"],
-    }),
+    getUsers: builder.query<UserQueryResponse, { page: number; limit: number }>(
+      {
+        query: ({ page, limit }) => ({
+          url: `v1/users?page=${page}&limit=${limit}`,
+          method: "GET",
+        }),
+        providesTags: ["User"],
+      },
+    ),
   }),
 });
 

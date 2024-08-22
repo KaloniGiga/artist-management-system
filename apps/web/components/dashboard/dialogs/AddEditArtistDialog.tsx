@@ -18,6 +18,7 @@ import {
 } from "@web/components/ui/form";
 import { Input } from "@web/components/ui/input";
 import { ArtistData, GenderEnum, RoleEnum } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,16 +28,12 @@ type IAddEditArtist = {
 };
 
 const formSchema = z.object({
+  id: z.number().optional(),
   name: z.string().min(1, { message: "Title is required" }),
   dob: z.date({
     required_error: "A date of birth is required.",
   }),
   gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
-  role_type: z.enum([
-    RoleEnum.SUPERADMIN,
-    RoleEnum.ARTISTMANAGER,
-    RoleEnum.ARTIST,
-  ]),
   address: z.string(),
   first_release_year: z.number(),
   no_of_albums_released: z.number(),
@@ -49,12 +46,23 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
       name: "",
       dob: undefined,
       gender: undefined,
-      role_type: undefined,
       address: "",
       first_release_year: undefined,
       no_of_albums_released: undefined,
     },
   });
+
+  useEffect(() => {
+    if (isEdit && editData) {
+      form.setValue("id", editData.id);
+      form.setValue("name", editData.name);
+      form.setValue("dob", editData.dob);
+      form.setValue("gender", editData.gender);
+      form.setValue("first_release_year", editData.first_release_year);
+      form.setValue("no_of_albums_released", editData.no_of_albums_released);
+      form.setValue("address", editData.address);
+    }
+  }, [isEdit, editData, form]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {};
 

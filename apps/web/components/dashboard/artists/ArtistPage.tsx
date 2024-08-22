@@ -12,6 +12,8 @@ export function ArtistPage() {
     {
       id: 1,
       name: "dipak kalauni",
+      dob: new Date("2022/01/3"),
+      address: "kathmandu",
       gender: GenderEnum.MALE,
       first_release_year: 2020,
       no_of_albums_released: 3,
@@ -19,6 +21,8 @@ export function ArtistPage() {
     {
       id: 2,
       name: "dipak kalauni",
+      dob: new Date("2022/01/3"),
+      address: "kathmandu",
       gender: GenderEnum.MALE,
       first_release_year: 2019,
       no_of_albums_released: 2,
@@ -29,9 +33,9 @@ export function ArtistPage() {
     <TableLayout
       title={"Artist Table"}
       description={"This table contains list of all the aritst"}
-      onClickAdd={() => console.log("add clicked")}
       data={data}
       columns={artistColumns}
+      loading={false}
     >
       <Dialog>
         <DialogTrigger asChild>

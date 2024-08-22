@@ -1,4 +1,5 @@
 "use client";
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,7 +19,7 @@ interface ITableMetaData {
   title: string;
   description: string;
   children: React.ReactNode;
-  onClickAdd: () => void;
+  loading: boolean;
 }
 
 type TableLayoutProps<TData, TValue> = DataTableProps<TData, TValue> &
@@ -29,6 +30,7 @@ export function TableLayout<TData, TValue>({
   children,
   columns,
   data,
+  loading,
 }: TableLayoutProps<TData, TValue>) {
   return (
     <div className="w-full">
@@ -41,7 +43,13 @@ export function TableLayout<TData, TValue>({
           {children}
         </CardHeader>
         <CardContent>
-          <DataTable data={data} columns={columns} />
+          {loading ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Loader2 className="h-6 w-6 animate-spin" />
+            </div>
+          ) : (
+            <DataTable data={data} columns={columns} />
+          )}
         </CardContent>
       </Card>
     </div>

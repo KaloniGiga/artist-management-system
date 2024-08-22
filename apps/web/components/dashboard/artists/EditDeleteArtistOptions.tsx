@@ -18,13 +18,14 @@ export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
       setIsDeleteClicked={setIsDeleteClicked}
     >
       {!isDeleteClicked && (
-        <AddEditArtistDialog isEdit={false} editData={null} />
+        <AddEditArtistDialog isEdit={true} editData={rowData} />
       )}
       {isDeleteClicked && (
         <DeleteDialog
           titleKey={"artist"}
           handleCancelDelete={() => console.log("well")}
           handleConfirmDelete={() => console.log("well")}
+          loading={false}
         />
       )}
     </ActionDropdown>
