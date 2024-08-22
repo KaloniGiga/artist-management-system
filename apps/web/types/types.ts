@@ -84,3 +84,11 @@ export interface AuthenticateResponse extends SuccessResponse {
 export interface LogoutResponse extends SuccessResponse {
   data: null;
 }
+
+export interface UserQueryResponse extends SuccessResponse {
+  data: UserData[];
+}
+
+export interface UserMutationResponse extends SuccessResponse {
+  data: UserData;
+}
