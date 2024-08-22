@@ -51,7 +51,7 @@ class UserDto {
   @ApiProperty()
   @IsEnum(RoleEnum)
   @IsNotEmpty()
-  role: RoleEnum;
+  role_type: RoleEnum;
 
   @ApiProperty()
   @IsString()

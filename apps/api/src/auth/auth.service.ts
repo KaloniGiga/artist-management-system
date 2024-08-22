@@ -29,7 +29,7 @@ export class AuthenticationService {
         throw new HttpException("Email already used.", HttpStatus.CONFLICT);
       }
 
-      if (registrationData.role !== RoleEnum.SUPERADMIN) {
+      if (registrationData.role_type !== RoleEnum.SUPERADMIN) {
         throw new HttpException(
           "Only super admin can register.",
           HttpStatus.BAD_REQUEST,

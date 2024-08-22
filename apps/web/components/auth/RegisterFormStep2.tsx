@@ -61,7 +61,7 @@ export default function RegisterFormStep2() {
 
   useEffect(() => {
     if (data) {
-      router.push("/login");
+      router.push("/");
     }
   }, [data, router]);
 
@@ -71,7 +71,7 @@ export default function RegisterFormStep2() {
       const { email, password } = formContext.user;
       console.log(formContext.user);
       if (email && password) {
-        registerUser(formContext.user);
+        registerUser({ ...formContext.user, ...values });
       } else {
         router.push("/dashboard/step-1");
       }
