@@ -49,7 +49,6 @@ export default function LoginForm() {
   const [login, { isLoading, data, error }] = useReadLoginMutation();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     login(values);
   };
 
@@ -67,7 +66,7 @@ export default function LoginForm() {
         </CardTitle>
         {error && (
           <CardDescription className="text-center text-[red]">
-            {error && "Something went wrong"}
+            Something went wrong
           </CardDescription>
         )}
       </CardHeader>

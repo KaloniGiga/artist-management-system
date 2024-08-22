@@ -8,12 +8,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@web/components/ui/dropdown-menu";
+import { useLogoutMutation } from "@web/redux/auth/auth.api";
 import { CircleUser } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function UserDropdown() {
+  const router = useRouter();
+  const [logout, { isSuccess }] = useLogoutMutation();
   const onLogoutClick = () => {
     console.log("logout clicked");
+    logout();
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.replace("/");
+    }
+  }, [isSuccess, router]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -14,6 +14,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: userData,
       }),
+      invalidatesTags: ["Auth"],
     }),
     registerUser: builder.mutation<AuthenticateResponse, User>({
       query: (userDetails) => ({
@@ -33,6 +34,7 @@ export const authApi = baseApi.injectEndpoints({
         url: "v1/auth",
         method: "GET",
       }),
+      providesTags: ["Auth"],
     }),
   }),
 });
