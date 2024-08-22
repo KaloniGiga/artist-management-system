@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker } from "@web/components/core/DatePicker";
@@ -17,6 +18,10 @@ import {
   FormMessage,
 } from "@web/components/ui/form";
 import { Input } from "@web/components/ui/input";
+import {
+  usePostArtistMutation,
+  usePutArtistMutation,
+} from "@web/redux/artist/artist.api";
 import { ArtistData, GenderEnum, RoleEnum } from "@web/types/types";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -25,6 +30,7 @@ import { z } from "zod";
 type IAddEditArtist = {
   isEdit: boolean;
   editData: ArtistData | null;
+  handleDialogClose: () => void;
 };
 
 const formSchema = z.object({
@@ -39,7 +45,16 @@ const formSchema = z.object({
   no_of_albums_released: z.number(),
 });
 
-export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
+export function AddEditArtistDialog({
+  isEdit,
+  editData,
+  handleDialogClose,
+}: IAddEditArtist) {
+  const [postArtist, { isLoading: postLoading, isSuccess: postSuccess }] =
+    usePostArtistMutation();
+  const [putArtist, { isLoading: putLoading, isSuccess: putSuccess }] =
+    usePutArtistMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,7 +79,19 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
     }
   }, [isEdit, editData, form]);
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {};
+  useEffect(() => {
+    if (postSuccess || putSuccess) {
+      handleDialogClose();
+    }
+  }, [postSuccess, putSuccess]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (isEdit && editData) {
+      putArtist({ id: editData.id, artistDetails: values });
+    } else {
+      postArtist(values);
+    }
+  };
 
   return (
     <DialogContent className="overflow-y-scroll max-h-screen">
@@ -85,6 +112,7 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
                     <FormLabel className="text-md">Title</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={postLoading || putLoading}
                         className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                         placeholder="brown"
                         {...field}
@@ -122,6 +150,7 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
                 <FormLabel className="text-md">Gender</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                     placeholder="simon234@gmail.com"
                     {...field}
@@ -140,6 +169,7 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
                 <FormLabel className="text-md">Address</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     placeholder="Enter address"
                     {...field}
@@ -158,6 +188,7 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
                 <FormLabel className="text-md">First Release Year</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     placeholder="Enter first release year"
                     {...field}
@@ -176,6 +207,7 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
                 <FormLabel className="text-md">No of albums released</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     placeholder="Enter no of albums released"
                     {...field}
@@ -186,7 +218,12 @@ export function AddEditArtistDialog({ isEdit, editData }: IAddEditArtist) {
             )}
           />
 
-          <Button size={"lg"} type="submit" className="w-full text-md">
+          <Button
+            disabled={postLoading || putLoading}
+            size={"lg"}
+            type="submit"
+            className="w-full text-md"
+          >
             {"Submit"}
           </Button>
         </form>
