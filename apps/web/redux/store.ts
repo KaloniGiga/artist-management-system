@@ -10,15 +10,16 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import storage from "./storage";
+import { baseApi } from "./base-query/base-query.config";
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["tracking"],
+  blacklist: [],
 };
 
 export const rootReducer = combineReducers({
-  // [baseApi.reducerPath]: baseApi.reducer,
+  [baseApi.reducerPath]: baseApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,7 +33,7 @@ export const makeStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(),
+      }).concat(baseApi.middleware),
   });
 };
 
