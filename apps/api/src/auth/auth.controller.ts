@@ -26,7 +26,6 @@ export class AuthenticationController {
       this.authenticationService.getCookieWithJwtAccessToken(user.id);
 
     request.res?.setHeader("Set-Cookie", [accessTokenCookie]);
-    return user;
   }
 
   @UseGuards(JwtAuthenticationGuard)

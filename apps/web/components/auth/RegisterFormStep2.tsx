@@ -23,10 +23,12 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { useRegisterUserFormContext } from "@web/context/register-form.context";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { GenderEnum, RoleEnum } from "@web/types/types";
 import validator from "validator";
 import { DatePicker } from "../core/DatePicker";
+import { useRegisterUserMutation } from "@web/redux/auth/auth.api";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   phone: z.string().refine(validator.isMobilePhone),
@@ -45,6 +47,7 @@ const formSchema = z.object({
 export default function RegisterFormStep2() {
   const router = useRouter();
   const formContext = useRegisterUserFormContext();
+  const [registerUser, { isLoading, data, error }] = useRegisterUserMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,10 +59,23 @@ export default function RegisterFormStep2() {
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      router.push("/");
+    }
+  }, [data, router]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     formContext.updateUser(values);
-    // todo: logic to sent data to server
+    if (formContext.user) {
+      const { email, password } = formContext.user;
+      console.log(formContext.user);
+      if (email && password) {
+        registerUser({ ...formContext.user, ...values });
+      } else {
+        router.push("/dashboard/step-1");
+      }
+    }
   };
 
   const prevStep = () => {
@@ -69,13 +85,22 @@ export default function RegisterFormStep2() {
   return (
     <Card className="w-[80%] lg:max-w-md py-4 border-none">
       <CardHeader>
-        <CardTitle className="flex gap-x-4 text-3xl font-bold">
-          <Button variant={"link"} onClick={prevStep}>
+        <CardTitle className="flex gap-x-2 text-3xl font-bold">
+          <Button
+            className="rounded-full"
+            size={"icon"}
+            variant={"ghost"}
+            onClick={prevStep}
+          >
             <ArrowLeft />
           </Button>
           <span>{"Tell us more about yourself?"}</span>
         </CardTitle>
-        <CardDescription></CardDescription>
+        {error && (
+          <CardDescription className="text-center text-[red]">
+            Something went wrong.
+          </CardDescription>
+        )}
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -88,6 +113,7 @@ export default function RegisterFormStep2() {
                   <FormLabel className="text-md">Phone</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                       placeholder="brown"
                       {...field}
@@ -121,6 +147,7 @@ export default function RegisterFormStep2() {
                   <FormLabel className="text-md">Enter Gender</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                       placeholder="Male"
                       {...field}
@@ -139,6 +166,7 @@ export default function RegisterFormStep2() {
                   <FormLabel className="text-md">Enter Role</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       className="h-10 text-md border-foreground focus-visible:border-none"
                       {...field}
                     />
@@ -156,6 +184,7 @@ export default function RegisterFormStep2() {
                   <FormLabel className="text-md">Address</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       className="h-10 text-md border-foreground focus-visible:border-none"
                       placeholder="Enter address"
                       {...field}
@@ -168,7 +197,13 @@ export default function RegisterFormStep2() {
           </CardContent>
 
           <CardFooter className="w-full flex flex-col space-y-3">
-            <Button size={"lg"} type="submit" className="w-full text-md">
+            <Button
+              disabled={isLoading}
+              size={"lg"}
+              type="submit"
+              className="w-full text-md"
+            >
+              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               {"Sign up"}
             </Button>
 

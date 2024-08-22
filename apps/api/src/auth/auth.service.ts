@@ -29,7 +29,7 @@ export class AuthenticationService {
         throw new HttpException("Email already used.", HttpStatus.CONFLICT);
       }
 
-      if (registrationData.role !== RoleEnum.SUPERADMIN) {
+      if (registrationData.role_type !== RoleEnum.SUPERADMIN) {
         throw new HttpException(
           "Only super admin can register.",
           HttpStatus.BAD_REQUEST,
@@ -89,11 +89,11 @@ export class AuthenticationService {
       secret: this.configService.get("JWT_ACCESS_TOKEN_SECRET"),
       expiresIn: `${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`,
     });
-    return `accessToken=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}`;
+    return `accessToken=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`;
   }
 
   public getCookiesForLogOut() {
-    return ["accessToken=; HttpOnly; Path=/; Max-Age=0"];
+    return ["accessToken=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"];
   }
 
   public async hashPassword(plainTextPassword: string) {

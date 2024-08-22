@@ -49,7 +49,7 @@ class UsersRepository {
         userData.phone,
         userData.dob,
         userData.gender,
-        userData.role,
+        userData.role_type,
         userData.address,
       ],
     );
@@ -71,7 +71,7 @@ class UsersRepository {
         userData.phone,
         userData.dob,
         userData.gender,
-        userData.role,
+        userData.role_type,
         userData.address,
       ],
     );
