@@ -13,7 +13,7 @@ import ArtistService from "./artists.service";
 import ArtistDto from "./dto/artist.dto";
 import { ApiTags } from "@nestjs/swagger";
 
-@Controller({ version: "1", path: "artist" })
+@Controller({ version: "1", path: "artists" })
 @ApiTags("Artists")
 class ArtistController {
   constructor(private readonly artistService: ArtistService) {}

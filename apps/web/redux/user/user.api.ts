@@ -1,5 +1,4 @@
 import {
-  LoginData,
   User,
   UserMutationResponse,
   UserQueryResponse,
@@ -8,7 +7,7 @@ import { baseApi } from "../base-query/base-query.config";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postUser: builder.mutation<UserMutationResponse, LoginData>({
+    postUser: builder.mutation<UserMutationResponse, User>({
       query: (userData) => ({
         url: `v1/users`,
         method: "POST",

@@ -92,3 +92,11 @@ export interface UserQueryResponse extends SuccessResponse {
 export interface UserMutationResponse extends SuccessResponse {
   data: UserData;
 }
+
+export interface ArtistQueryResponse extends SuccessResponse {
+  data: ArtistData[];
+}
+
+export interface ArtistMutationResponse extends SuccessResponse {
+  data: ArtistData;
+}
