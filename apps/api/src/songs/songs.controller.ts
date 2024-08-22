@@ -18,7 +18,7 @@ import JwtAuthenticationGuard from "@server/auth/guards/jwt.guard";
 import { RequestWithUser } from "@server/auth/types/types";
 import { RoleEnum } from "@server/users/types/types";
 
-@Controller({ version: "1", path: "song" })
+@Controller({ version: "1", path: "songs" })
 @ApiTags("Songs")
 class SongsController {
   constructor(private readonly songsService: SongsService) {}

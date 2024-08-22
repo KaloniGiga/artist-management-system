@@ -100,3 +100,11 @@ export interface ArtistQueryResponse extends SuccessResponse {
 export interface ArtistMutationResponse extends SuccessResponse {
   data: ArtistData;
 }
+
+export interface SongQueryResponse extends SuccessResponse {
+  data: SongData[];
+}
+
+export interface SongMutationResponse extends SuccessResponse {
+  data: SongData;
+}
