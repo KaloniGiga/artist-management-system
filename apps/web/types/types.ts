@@ -3,6 +3,7 @@ export interface User {
   last_name?: string;
   email?: string;
   phone?: string;
+  password?: string;
   dob?: Date;
   gender?: GenderEnum;
   role_type?: RoleEnum;
@@ -37,6 +38,11 @@ export interface SongData extends Song {
   id: number;
 }
 
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
 // "This will allow you to update the state within the context whenever you need to."
 export interface UserContextProps {
   user: User | null;
@@ -61,4 +67,20 @@ export enum GenreEnum {
   CLASSIC = "classic",
   COUNTRY = "country",
   JAZZ = "jazz",
+}
+
+interface SuccessResponse {
+  status: boolean;
+  path: string;
+  message: string;
+  statusCode: number;
+  timestamp: Date;
+}
+
+export interface AuthenticateResponse extends SuccessResponse {
+  data: Omit<UserData, "password">;
+}
+
+export interface LogoutResponse extends SuccessResponse {
+  data: null;
 }
