@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@web/components/ui/button";
@@ -16,13 +17,19 @@ import {
   FormMessage,
 } from "@web/components/ui/form";
 import { Input } from "@web/components/ui/input";
+import {
+  usePostSongMutation,
+  usePutSongMutation,
+} from "@web/redux/song/song.api";
 import { GenreEnum, SongData } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type IAddEditSong = {
   isEdit: boolean;
   editData: SongData | null;
+  handleDialogClose: () => void;
 };
 
 const formSchema = z.object({
@@ -37,7 +44,16 @@ const formSchema = z.object({
   ]),
 });
 
-export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
+export function AddEditSongDialog({
+  isEdit,
+  editData,
+  handleDialogClose,
+}: IAddEditSong) {
+  const [postSong, { isLoading: postLoading, isSuccess: postSuccess }] =
+    usePostSongMutation();
+  const [putSong, { isLoading: putLoading, isSuccess: putSuccess }] =
+    usePutSongMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,7 +63,27 @@ export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {};
+  useEffect(() => {
+    if (isEdit && editData) {
+      form.setValue("title", editData.title);
+      form.setValue("album_name", editData.album_name);
+      form.setValue("genre", editData.genre);
+    }
+  }, [isEdit, editData, form]);
+
+  useEffect(() => {
+    if (postSuccess || putSuccess) {
+      handleDialogClose();
+    }
+  }, [postSuccess, putSuccess]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (isEdit && editData) {
+      putSong({ id: editData.id, songDetails: values });
+    } else {
+      postSong(values);
+    }
+  };
 
   return (
     <DialogContent className="overflow-y-scroll max-h-screen">
@@ -68,6 +104,7 @@ export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
                     <FormLabel className="text-md">Title</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={putLoading || postLoading}
                         className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                         placeholder="brown"
                         {...field}
@@ -87,6 +124,7 @@ export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
                     <FormLabel className="text-md">Album name</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={putLoading || postLoading}
                         className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                         placeholder="brown"
                         {...field}
@@ -106,6 +144,7 @@ export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
                 <FormLabel className="text-md">Genre</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                     placeholder="simon234@gmail.com"
                     {...field}
@@ -116,7 +155,12 @@ export function AddEditSongDialog({ isEdit, editData }: IAddEditSong) {
             )}
           />
 
-          <Button size={"lg"} type="submit" className="w-full text-md">
+          <Button
+            disabled={putLoading || postLoading}
+            size={"lg"}
+            type="submit"
+            className="w-full text-md"
+          >
             {"Submit"}
           </Button>
         </form>

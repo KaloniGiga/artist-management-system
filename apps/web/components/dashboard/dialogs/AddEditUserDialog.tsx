@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker } from "@web/components/core/DatePicker";
@@ -17,7 +18,12 @@ import {
   FormMessage,
 } from "@web/components/ui/form";
 import { Input } from "@web/components/ui/input";
+import {
+  usePostUserMutation,
+  usePutUserMutation,
+} from "@web/redux/user/user.api";
 import { GenderEnum, RoleEnum, UserData } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import validator from "validator";
 import { z } from "zod";
@@ -25,9 +31,11 @@ import { z } from "zod";
 type IAddEditUser = {
   isEdit: boolean;
   editData: UserData | null;
+  handleDialogClose: () => void;
 };
 
 const formSchema = z.object({
+  id: z.number().optional(),
   first_name: z.string().min(1, { message: "First name is required" }),
   last_name: z.string().min(1, { message: "Last name is required" }),
   email: z
@@ -50,7 +58,15 @@ const formSchema = z.object({
   address: z.string(),
 });
 
-export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
+export function AddEditUserDialog({
+  isEdit,
+  editData,
+  handleDialogClose,
+}: IAddEditUser) {
+  const [postUser, { isLoading: postLoading, isSuccess: postSuccess }] =
+    usePostUserMutation();
+  const [putUser, { isLoading: putLoading, isSuccess: putSuccess }] =
+    usePutUserMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,7 +82,32 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {};
+  useEffect(() => {
+    if (isEdit && editData) {
+      form.setValue("first_name", editData.first_name);
+      form.setValue("last_name", editData.last_name);
+      form.setValue("email", editData.email);
+      form.setValue("phone", editData.phone);
+      form.setValue("dob", editData.dob);
+      form.setValue("gender", editData.gender);
+      form.setValue("role_type", editData.role_type);
+      form.setValue("address", editData.address);
+    }
+  }, [isEdit, editData, form]);
+
+  useEffect(() => {
+    if (postSuccess || putSuccess) {
+      handleDialogClose();
+    }
+  }, [postSuccess, putSuccess]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (isEdit && editData) {
+      putUser({ id: editData.id, userDetails: values });
+    } else {
+      postUser(values);
+    }
+  };
 
   return (
     <DialogContent className="overflow-y-scroll max-h-screen">
@@ -87,8 +128,9 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                     <FormLabel className="text-md">First name</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={putLoading || postLoading}
                         className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
-                        placeholder="brown"
+                        placeholder="simon"
                         {...field}
                       />
                     </FormControl>
@@ -106,6 +148,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                     <FormLabel className="text-md">Last name</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={putLoading || postLoading}
                         className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                         placeholder="brown"
                         {...field}
@@ -125,6 +168,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                 <FormLabel className="text-md">Enter your email</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                     placeholder="simon234@gmail.com"
                     {...field}
@@ -143,6 +187,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                 <FormLabel className="text-md">Enter Password</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     type="password"
                     placeholder="password"
@@ -162,6 +207,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                 <FormLabel className="text-md">Phone</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                     placeholder="brown"
                     {...field}
@@ -195,6 +241,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                 <FormLabel className="text-md">Enter Gender</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                     placeholder="Male"
                     {...field}
@@ -213,6 +260,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                 <FormLabel className="text-md">Enter Role</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     {...field}
                   />
@@ -230,6 +278,7 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
                 <FormLabel className="text-md">Address</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     placeholder="Enter address"
                     {...field}
@@ -240,7 +289,12 @@ export function AddEditUserDialog({ isEdit, editData }: IAddEditUser) {
             )}
           />
 
-          <Button size={"lg"} type="submit" className="w-full text-md">
+          <Button
+            disabled={putLoading || postLoading}
+            size={"lg"}
+            type="submit"
+            className="w-full text-md"
+          >
             {"Submit"}
           </Button>
         </form>

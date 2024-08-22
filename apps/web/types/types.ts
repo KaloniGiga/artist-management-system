@@ -1,13 +1,13 @@
 export interface User {
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  phone?: string;
-  password?: string;
-  dob?: Date;
-  gender?: GenderEnum;
-  role_type?: RoleEnum;
-  address?: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  password: string;
+  dob: Date;
+  gender: GenderEnum;
+  role_type: RoleEnum;
+  address: string;
 }
 
 export interface UserData extends User {
@@ -16,9 +16,9 @@ export interface UserData extends User {
 
 export interface Artist {
   name: string;
-  dob?: Date;
+  dob: Date;
   gender: GenderEnum;
-  address?: string;
+  address: string;
   first_release_year: number;
   no_of_albums_released: number;
 }
@@ -83,4 +83,28 @@ export interface AuthenticateResponse extends SuccessResponse {
 
 export interface LogoutResponse extends SuccessResponse {
   data: null;
+}
+
+export interface UserQueryResponse extends SuccessResponse {
+  data: UserData[];
+}
+
+export interface UserMutationResponse extends SuccessResponse {
+  data: UserData;
+}
+
+export interface ArtistQueryResponse extends SuccessResponse {
+  data: ArtistData[];
+}
+
+export interface ArtistMutationResponse extends SuccessResponse {
+  data: ArtistData;
+}
+
+export interface SongQueryResponse extends SuccessResponse {
+  data: SongData[];
+}
+
+export interface SongMutationResponse extends SuccessResponse {
+  data: SongData;
 }
