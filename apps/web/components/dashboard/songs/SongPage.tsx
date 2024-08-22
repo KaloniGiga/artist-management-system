@@ -16,9 +16,9 @@ export function SongPage() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [open, setOpen] = useState(false);
-
+  const authorId = Number(params.authorId as unknown as string);
   const { isLoading, data: songData } = useGetSongsQuery({
-    authorId: parseInt(params.authorId as string),
+    authorId: authorId,
     limit: limit,
     page: page,
   });
