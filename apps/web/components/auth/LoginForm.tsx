@@ -21,6 +21,10 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useReadLoginMutation } from "@web/redux/auth/auth.api";
+import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z
@@ -33,6 +37,7 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,9 +46,18 @@ export default function LoginForm() {
     },
   });
 
+  const [login, { isLoading, data, error }] = useReadLoginMutation();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    login(values);
   };
+
+  useEffect(() => {
+    if (data) {
+      router.replace("/dashboard");
+    }
+  }, [data, router]);
 
   return (
     <Card className="w-[80%] lg:max-w-md py-4 border-none">
@@ -51,7 +65,11 @@ export default function LoginForm() {
         <CardTitle className="text-3xl font-bold">
           {"Welcome Back! Please Login"}
         </CardTitle>
-        <CardDescription></CardDescription>
+        {error && (
+          <CardDescription className="text-center text-[red]">
+            {error && "Something went wrong"}
+          </CardDescription>
+        )}
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -64,6 +82,7 @@ export default function LoginForm() {
                   <FormLabel className="text-md">Enter your email</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
                       placeholder="simon234@gmail.com"
                       {...field}
@@ -82,6 +101,7 @@ export default function LoginForm() {
                   <FormLabel className="text-md">Enter Password</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       className="h-10 text-md border-foreground focus-visible:border-none"
                       type="password"
                       placeholder="password"
@@ -95,7 +115,13 @@ export default function LoginForm() {
           </CardContent>
 
           <CardFooter className="w-full flex flex-col space-y-3">
-            <Button size={"lg"} type="submit" className="w-full text-md">
+            <Button
+              disabled={isLoading}
+              size={"lg"}
+              type="submit"
+              className="w-full text-md"
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {"Login"}
             </Button>
 

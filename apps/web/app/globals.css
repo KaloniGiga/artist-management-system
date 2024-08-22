@@ -89,6 +89,14 @@
   background: #555;
 }
 
+html {
+  width: 100%;
+}
+
+body {
+  width: 100%;
+}
+
 @layer base {
   * {
     @apply border-border;

@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="w-full flex min-h-screen items-center justify-center p-4">
       <UserRegisterFormContextProvier>
         {children}
       </UserRegisterFormContextProvier>

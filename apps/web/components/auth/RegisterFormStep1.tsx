@@ -178,7 +178,7 @@ export default function RegisterFormStep1() {
           </CardContent>
 
           <CardFooter className="w-full flex flex-col space-y-3">
-            <Button size={"lg"} type="submit" className="w-full text-md">
+            <Button size={"lg"} className="w-full text-md">
               {"Next"}
             </Button>
 
