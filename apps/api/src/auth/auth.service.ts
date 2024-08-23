@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import UsersService from "@server/users/users.service";
@@ -44,7 +39,7 @@ export class AuthenticationService {
       return createdUser;
     } catch (error) {
       throw new HttpException(
-        "Something went wrong",
+        "Failed to register user",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -54,7 +49,10 @@ export class AuthenticationService {
     try {
       const user = await this.usersService.getUserByEmail(email);
       if (!user) {
-        throw new NotFoundException();
+        throw new HttpException(
+          "Wrong credentials provided",
+          HttpStatus.BAD_REQUEST,
+        );
       }
       await this.verifyPassword(plainTextPassword, user.password);
       user.password = undefined;

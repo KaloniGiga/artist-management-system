@@ -9,14 +9,16 @@ import { Calendar } from "../ui/calendar";
 import { cn } from "@web/lib/utils";
 
 interface IDatePicker {
-  date: Date | null;
+  date: Date;
   onDateChange: (...event: unknown[]) => void;
+  disabled?: boolean;
 }
-export function DatePicker({ date, onDateChange }: IDatePicker) {
+export function DatePicker({ date, onDateChange, disabled }: IDatePicker) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant={"outline"}
           className={cn(
             "w-full h-10 justify-start text-left font-normal border-foreground border-opacity-0 focus-visible:border-none",

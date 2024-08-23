@@ -45,6 +45,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
+    console.log(status);
 
     response.status(status).json({
       status: false,

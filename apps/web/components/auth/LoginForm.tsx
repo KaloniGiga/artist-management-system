@@ -25,6 +25,7 @@ import { useReadLoginMutation } from "@web/redux/auth/auth.api";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { extractMessageFromError } from "@web/lib/utils";
 
 const formSchema = z.object({
   email: z
@@ -65,8 +66,8 @@ export default function LoginForm() {
           {"Welcome Back! Please Login"}
         </CardTitle>
         {error && (
-          <CardDescription className="text-center text-[red]">
-            Something went wrong
+          <CardDescription className="text-center text-md text-[red]">
+            {extractMessageFromError(error)}
           </CardDescription>
         )}
       </CardHeader>
