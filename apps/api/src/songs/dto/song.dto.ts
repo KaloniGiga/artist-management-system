@@ -28,7 +28,7 @@ class SongDto {
   @IsOptional()
   @IsNumber()
   @IsNotEmpty()
-  authorId: number;
+  artistId: number;
 }
 
 export default SongDto;

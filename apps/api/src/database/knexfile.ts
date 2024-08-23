@@ -19,6 +19,9 @@ const knexConfig: Knex.Config = {
     user: configService.get("POSTGRES_USER"),
     password: configService.get("POSTGRES_PASSWORD"),
     database: configService.get("POSTGRES_DB"),
+    ssl: {
+      rejectUnauthorized: false,
+    },
   },
   migrations: {
     directory: "./migrations",
