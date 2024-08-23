@@ -22,7 +22,6 @@ export function UserPage() {
     setOpen(false);
   };
 
-  console.log(userData);
   return (
     <TableLayout
       title={"List of Users"}
