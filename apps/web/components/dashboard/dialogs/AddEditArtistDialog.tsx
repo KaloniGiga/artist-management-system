@@ -18,13 +18,15 @@ import {
   FormMessage,
 } from "@web/components/ui/form";
 import { Input } from "@web/components/ui/input";
+import { extractMessageFromError } from "@web/lib/utils";
 import {
   usePostArtistMutation,
   usePutArtistMutation,
 } from "@web/redux/artist/artist.api";
-import { ArtistData, GenderEnum, RoleEnum } from "@web/types/types";
+import { ArtistData, GenderEnum } from "@web/types/types";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type IAddEditArtist = {
@@ -34,15 +36,14 @@ type IAddEditArtist = {
 };
 
 const formSchema = z.object({
-  id: z.number().optional(),
   name: z.string().min(1, { message: "Title is required" }),
   dob: z.date({
     required_error: "A date of birth is required.",
   }),
   gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
   address: z.string(),
-  first_release_year: z.number(),
-  no_of_albums_released: z.number(),
+  first_release_year: z.coerce.number(),
+  no_of_albums_released: z.coerce.number(),
 });
 
 export function AddEditArtistDialog({
@@ -50,28 +51,24 @@ export function AddEditArtistDialog({
   editData,
   handleDialogClose,
 }: IAddEditArtist) {
-  const [postArtist, { isLoading: postLoading, isSuccess: postSuccess }] =
-    usePostArtistMutation();
-  const [putArtist, { isLoading: putLoading, isSuccess: putSuccess }] =
-    usePutArtistMutation();
+  const [
+    postArtist,
+    { isLoading: postLoading, isSuccess: postSuccess, error: postError },
+  ] = usePostArtistMutation();
+  const [
+    putArtist,
+    { isLoading: putLoading, isSuccess: putSuccess, error: putError },
+  ] = usePutArtistMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      dob: undefined,
-      gender: undefined,
-      address: "",
-      first_release_year: undefined,
-      no_of_albums_released: undefined,
-    },
   });
 
   useEffect(() => {
+    form.reset();
     if (isEdit && editData) {
-      form.setValue("id", editData.id);
       form.setValue("name", editData.name);
-      form.setValue("dob", editData.dob);
+      form.setValue("dob", new Date(editData.dob));
       form.setValue("gender", editData.gender);
       form.setValue("first_release_year", editData.first_release_year);
       form.setValue("no_of_albums_released", editData.no_of_albums_released);
@@ -97,7 +94,16 @@ export function AddEditArtistDialog({
     <DialogContent className="overflow-y-scroll max-h-screen">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold tracking-tight">{`${isEdit ? "Modify Artist Information" : "New Artist Entry"}`}</DialogTitle>
-        <DialogDescription></DialogDescription>
+        {putError && (
+          <DialogDescription className="text-center text-[red]">
+            {extractMessageFromError(putError)}
+          </DialogDescription>
+        )}
+        {postError && (
+          <DialogDescription className="text-center text-[red]">
+            {extractMessageFromError(postError)}
+          </DialogDescription>
+        )}
       </DialogHeader>
 
       <Form {...form}>
@@ -109,12 +115,12 @@ export function AddEditArtistDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-md">Title</FormLabel>
+                    <FormLabel className="text-md">Name</FormLabel>
                     <FormControl>
                       <Input
                         disabled={postLoading || putLoading}
                         className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
-                        placeholder="brown"
+                        placeholder="simon brown"
                         {...field}
                       />
                     </FormControl>
@@ -152,7 +158,7 @@ export function AddEditArtistDialog({
                   <Input
                     disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
-                    placeholder="simon234@gmail.com"
+                    placeholder="Male"
                     {...field}
                   />
                 </FormControl>
@@ -191,6 +197,7 @@ export function AddEditArtistDialog({
                     disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     placeholder="Enter first release year"
+                    type="number"
                     {...field}
                   />
                 </FormControl>
@@ -210,6 +217,7 @@ export function AddEditArtistDialog({
                     disabled={postLoading || putLoading}
                     className="h-10 text-md border-foreground focus-visible:border-none"
                     placeholder="Enter no of albums released"
+                    type="number"
                     {...field}
                   />
                 </FormControl>

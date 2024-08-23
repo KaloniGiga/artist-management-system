@@ -23,6 +23,9 @@ import DatabaseService from "./database.service";
           user: databaseOptions.user,
           password: databaseOptions.password,
           database: databaseOptions.database,
+          ssl: {
+            rejectUnauthorized: false,
+          },
         });
       },
     },

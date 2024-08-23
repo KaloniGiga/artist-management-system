@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface User {
   first_name: string;
   last_name: string;
@@ -107,4 +108,13 @@ export interface SongQueryResponse extends SuccessResponse {
 
 export interface SongMutationResponse extends SuccessResponse {
   data: SongData;
+}
+
+export interface SerializedErrorResponse {
+  status: boolean;
+  statusCode: number;
+  path: string;
+  message: string;
+  result: any;
+  timestamp: string;
 }

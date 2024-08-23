@@ -69,26 +69,16 @@ export function AddEditUserDialog({
     usePutUserMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      password: "",
-      dob: undefined,
-      gender: undefined,
-      role_type: undefined,
-      address: "",
-    },
   });
 
   useEffect(() => {
+    form.reset();
     if (isEdit && editData) {
       form.setValue("first_name", editData.first_name);
       form.setValue("last_name", editData.last_name);
       form.setValue("email", editData.email);
       form.setValue("phone", editData.phone);
-      form.setValue("dob", editData.dob);
+      form.setValue("dob", new Date(editData.dob));
       form.setValue("gender", editData.gender);
       form.setValue("role_type", editData.role_type);
       form.setValue("address", editData.address);
@@ -209,7 +199,7 @@ export function AddEditUserDialog({
                   <Input
                     disabled={putLoading || postLoading}
                     className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none"
-                    placeholder="brown"
+                    placeholder="e.g. 9868810345"
                     {...field}
                   />
                 </FormControl>

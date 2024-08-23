@@ -24,6 +24,15 @@ class ArtistService {
 
   async createArtist(artistData: ArtistDto) {
     try {
+      const isNameExist = await this.artistsRepository.getArtistByName(
+        artistData.name,
+      );
+      if (isNameExist) {
+        throw new HttpException(
+          "Artist name already exits.",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       return await this.artistsRepository.create(artistData);
     } catch (error) {
       console.log(error);
