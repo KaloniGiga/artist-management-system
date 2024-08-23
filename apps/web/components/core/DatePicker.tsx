@@ -9,7 +9,7 @@ import { Calendar } from "../ui/calendar";
 import { cn } from "@web/lib/utils";
 
 interface IDatePicker {
-  date: Date;
+  date: Date | null;
   onDateChange: (...event: unknown[]) => void;
 }
 export function DatePicker({ date, onDateChange }: IDatePicker) {

@@ -30,6 +30,18 @@ class ArtistRepository {
     return plainToInstance(ArtistModel, entity);
   }
 
+  async getArtistByName(name: string) {
+    const databaseResponse = await this.databaseService.runQuery(
+      `SELECT name FROM artists WHERE name=$1`,
+      [name],
+    );
+    const entity = databaseResponse.rows[0];
+    if (!entity) {
+      throw new NotFoundException();
+    }
+    return plainToInstance(ArtistModel, entity);
+  }
+
   async create(artistData: ArtistDto) {
     const databaseResponse = await this.databaseService.runQuery(
       `INSERT INTO artists (name, dob, gender, address, first_release_year, no_of_albums_released) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,

@@ -56,14 +56,10 @@ export function AddEditSongDialog({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      album_name: "",
-      genre: undefined,
-    },
   });
 
   useEffect(() => {
+    form.reset();
     if (isEdit && editData) {
       form.setValue("title", editData.title);
       form.setValue("album_name", editData.album_name);
