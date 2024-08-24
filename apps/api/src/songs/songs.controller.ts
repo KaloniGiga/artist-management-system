@@ -51,10 +51,7 @@ class SongsController {
   @ResponseMessage("Song created successfully")
   @Roles(RoleEnum.ARTIST)
   async createSong(@Req() request: RequestWithUser, @Body() songData: SongDto) {
-    const artistId =
-      request.user.role == RoleEnum.ARTIST
-        ? request.user.id
-        : songData.artistId;
+    const artistId = songData.artistId;
     return await this.songsService.createSong(songData, artistId);
   }
 
