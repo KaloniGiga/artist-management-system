@@ -1,6 +1,12 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import UsersRepository from "./repository/users.repository";
 import UserDto from "./dto/user.dto";
+import { hashAText } from "@server/common/utils/utils";
 
 @Injectable()
 class UsersService {
@@ -28,6 +34,21 @@ class UsersService {
     } catch (error) {
       return new InternalServerErrorException();
     }
+  }
+
+  async addUser(userData: UserDto) {
+    const emailExists = await this.getUserByEmail(userData.email);
+    if (emailExists) {
+      throw new HttpException("Email already used.", HttpStatus.CONFLICT);
+    }
+
+    const hashedPassword = await hashAText(userData.password);
+
+    const createdUser = await this.createUser({
+      ...userData,
+      password: hashedPassword,
+    });
+    return createdUser;
   }
 
   async createUser(userData: UserDto) {

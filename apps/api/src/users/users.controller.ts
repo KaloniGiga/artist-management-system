@@ -49,7 +49,7 @@ class UsersController {
   })
   @ResponseMessage("User created successsfully.")
   createUser(@Body() userData: UserDto) {
-    return this.usersService.createUser(userData);
+    return this.usersService.addUser(userData);
   }
 
   @Put(":id")

@@ -3,9 +3,9 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import UsersService from "@server/users/users.service";
 import RegisterUserDto from "./dto/register-user.dto";
-import * as bcrypt from "bcrypt";
 import { TokenPayload } from "./types/types";
 import { RoleEnum } from "@server/users/types/types";
+import { compareHashAndText, hashAText } from "@server/common/utils/utils";
 
 @Injectable()
 export class AuthenticationService {
@@ -38,10 +38,7 @@ export class AuthenticationService {
       });
       return createdUser;
     } catch (error) {
-      throw new HttpException(
-        "Failed to register user",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -69,7 +66,7 @@ export class AuthenticationService {
     plainTextPassword: string,
     hashedPassword: string,
   ) {
-    const isPasswordMatching = await bcrypt.compare(
+    const isPasswordMatching = compareHashAndText(
       plainTextPassword,
       hashedPassword,
     );
@@ -94,7 +91,7 @@ export class AuthenticationService {
     return ["accessToken=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"];
   }
 
-  public async hashPassword(plainTextPassword: string) {
-    return await bcrypt.hash(plainTextPassword, 10);
+  private async hashPassword(plainTextPassword: string) {
+    return await hashAText(plainTextPassword);
   }
 }

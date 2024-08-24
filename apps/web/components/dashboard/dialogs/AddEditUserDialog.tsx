@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@web/components/ui/form";
 import { Input } from "@web/components/ui/input";
+import { extractMessageFromError } from "@web/lib/utils";
 import {
   usePostUserMutation,
   usePutUserMutation,
@@ -63,10 +64,14 @@ export function AddEditUserDialog({
   editData,
   handleDialogClose,
 }: IAddEditUser) {
-  const [postUser, { isLoading: postLoading, isSuccess: postSuccess }] =
-    usePostUserMutation();
-  const [putUser, { isLoading: putLoading, isSuccess: putSuccess }] =
-    usePutUserMutation();
+  const [
+    postUser,
+    { isLoading: postLoading, isSuccess: postSuccess, error: postError },
+  ] = usePostUserMutation();
+  const [
+    putUser,
+    { isLoading: putLoading, isSuccess: putSuccess, error: putError },
+  ] = usePutUserMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -103,7 +108,17 @@ export function AddEditUserDialog({
     <DialogContent className="overflow-y-scroll max-h-screen">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold tracking-tight">{`${isEdit ? "Modify User Information" : "New User Entry"}`}</DialogTitle>
-        <DialogDescription></DialogDescription>
+        {putError && (
+          <DialogDescription className="text-center text-md text-[red]">
+            {extractMessageFromError(putError)}
+          </DialogDescription>
+        )}
+
+        {postError && (
+          <DialogDescription className="text-center text-md text-[red]">
+            {extractMessageFromError(postError)}
+          </DialogDescription>
+        )}
       </DialogHeader>
 
       <Form {...form}>
