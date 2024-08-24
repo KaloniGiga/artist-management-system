@@ -20,7 +20,8 @@ export const baseQueryWithReauth = async (
 
   if (result.error && isFetchBaseQueryError(result.error)) {
     if (result.error.status == 401) {
-      window.location.href = "/";
+      console.log(result.error.status);
+      // window.location.href = "/";
     } else {
       result = await baseQuery(args, api, extraOptions);
     }

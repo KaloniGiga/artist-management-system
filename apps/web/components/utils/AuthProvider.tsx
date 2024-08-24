@@ -1,20 +1,19 @@
 "use client";
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useGetUserQuery } from "../redux/auth/auth.api";
+import { useGetUserQuery } from "../../redux/auth/auth.api";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
-  const { isLoading, error } = useGetUserQuery();
+  const { isLoading, isSuccess, isError } = useGetUserQuery();
 
   useEffect(() => {
-    if (error && pathname !== "/" && pathname !== "/register") {
-      router.replace("/");
+    if (isSuccess) {
+      router.replace("/dashboard");
     }
-  }, [error, router, pathname]);
+  }, [isSuccess]);
 
   if (isLoading) {
     return (
@@ -24,5 +23,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     );
   }
 
-  return <div>{children}</div>;
+  if (isError) {
+    return children;
+  }
 }
