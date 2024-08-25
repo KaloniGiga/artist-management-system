@@ -5,6 +5,7 @@ import {
   usePutSongMutation,
 } from "@web/redux/song/song.api";
 import { GenreEnum, SongData } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -38,6 +39,14 @@ export default function useAddEditSong({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (isEdit && editData) {
+      form.setValue("title", editData.title);
+      form.setValue("album_name", editData.album_name);
+      form.setValue("genre", editData.genre);
+    }
+  }, [isEdit, editData]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (isEdit && editData) {

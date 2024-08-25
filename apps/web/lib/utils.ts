@@ -19,10 +19,12 @@ export function isFetchBaseQueryError(
   );
 }
 
+/**
+ * @function: extracts the message from the error
+ */
 export function extractMessageFromError(
   error: FetchBaseQueryError | SerializedError,
 ) {
-  console.log(error);
   if (isFetchBaseQueryError(error)) {
     return "error" in error
       ? error.error

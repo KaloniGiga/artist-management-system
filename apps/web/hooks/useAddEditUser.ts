@@ -5,6 +5,7 @@ import {
   usePutUserMutation,
 } from "@web/redux/user/user.api";
 import { GenderEnum, RoleEnum, UserData } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import validator from "validator";
@@ -50,6 +51,19 @@ export default function useAddEditUser({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (isEdit && editData) {
+      form.setValue("first_name", editData.first_name);
+      form.setValue("last_name", editData.last_name);
+      form.setValue("email", editData.email);
+      form.setValue("dob", editData.dob);
+      form.setValue("gender", editData.gender);
+      form.setValue("phone", editData.phone);
+      form.setValue("role_type", editData.role_type);
+      form.setValue("address", editData.address);
+    }
+  }, [isEdit, editData]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (isEdit && editData) {

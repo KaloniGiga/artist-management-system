@@ -5,6 +5,7 @@ import {
   usePutArtistMutation,
 } from "@web/redux/artist/artist.api";
 import { ArtistData, GenderEnum } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -36,6 +37,18 @@ export default function useAddEditArtist({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (isEdit && editData) {
+      form.setValue("name", editData.name);
+      form.setValue("dob", editData.dob);
+      form.setValue("gender", editData.gender);
+      form.setValue("dob", editData.dob);
+      form.setValue("first_release_year", editData.first_release_year);
+      form.setValue("no_of_albums_released", editData.no_of_albums_released);
+      form.setValue("address", editData.address);
+    }
+  }, [isEdit, editData]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (isEdit && editData) {
