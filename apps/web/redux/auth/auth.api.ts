@@ -44,4 +44,5 @@ export const {
   useRegisterUserMutation,
   useLogoutMutation,
   useGetUserQuery,
+  useLazyGetUserQuery,
 } = authApi;

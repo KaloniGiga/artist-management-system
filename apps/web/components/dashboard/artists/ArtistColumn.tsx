@@ -1,7 +1,7 @@
 "use client";
 import { ArtistData } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { EditDeleteArtistOptions } from "./EditDeleteArtistOptions";
+import { EditDeleteArtistOptions } from "./EditDeleteArtistOption";
 
 export const artistColumns: ColumnDef<ArtistData>[] = [
   {

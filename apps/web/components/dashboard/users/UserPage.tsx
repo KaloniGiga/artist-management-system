@@ -5,9 +5,10 @@ import { userColumns } from "./UserColumns";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { Button } from "@web/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { AddEditUserDialog } from "../dialogs/AddEditUserDialog";
+import { AddEditUserDialog } from "../../dialog/AddEditUserDialog";
 import { useGetUsersQuery } from "@web/redux/user/user.api";
 import { useState } from "react";
+import DialogLayout from "../../dialog/DialogLayout";
 
 export function UserPage() {
   const [page, setPage] = useState(0);
@@ -22,7 +23,6 @@ export function UserPage() {
     setOpen(false);
   };
 
-  console.log(userData);
   return (
     <TableLayout
       title={"List of Users"}
@@ -33,19 +33,13 @@ export function UserPage() {
       columns={userColumns}
       loading={isLoading}
     >
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button size="sm" className="ml-auto gap-1">
-            Add
-            <PlusCircle className="h-4 w-4" />
-          </Button>
-        </DialogTrigger>
+      <DialogLayout open={open} setOpen={setOpen} buttonLabel="Add" icon={true}>
         <AddEditUserDialog
           handleDialogClose={handleDialogClose}
           isEdit={false}
           editData={null}
         />
-      </Dialog>
+      </DialogLayout>
     </TableLayout>
   );
 }

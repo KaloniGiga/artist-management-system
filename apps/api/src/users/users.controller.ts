@@ -49,7 +49,7 @@ class UsersController {
   })
   @ResponseMessage("User created successsfully.")
   createUser(@Body() userData: UserDto) {
-    return this.usersService.createUser(userData);
+    return this.usersService.addUser(userData);
   }
 
   @Put(":id")
@@ -60,10 +60,7 @@ class UsersController {
     description: "update user whose id is provided",
   })
   @ResponseMessage("User updated successsfully.")
-  updateUser(
-    @Param("id", ParseIntPipe) id: number,
-    @Body() userData: Omit<UserDto, "password">,
-  ) {
+  updateUser(@Param("id", ParseIntPipe) id: number, @Body() userData: UserDto) {
     return this.usersService.updateUser(id, userData);
   }
 

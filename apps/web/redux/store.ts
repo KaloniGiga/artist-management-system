@@ -1,39 +1,21 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  persistReducer,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-} from "redux-persist";
-import storage from "./storage";
 import { baseApi } from "./base-query/base-query.config";
-
-const persistConfig = {
-  key: "root",
-  storage,
-  blacklist: [],
-};
+import authReducer from "./auth/auth.slice";
 
 export const rootReducer = combineReducers({
+  auth: authReducer,
   [baseApi.reducerPath]: baseApi.reducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 export const makeStore = () => {
   return configureStore({
-    reducer: persistedReducer,
+    reducer: rootReducer,
     devTools: process.env.NODE_ENV !== "production",
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
-      }).concat(baseApi.middleware),
+      getDefaultMiddleware({ serializableCheck: false }).concat(
+        baseApi.middleware,
+      ),
   });
 };
 

@@ -1,10 +1,19 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import SongsRepository from "./repository/songs.repository";
 import SongDto from "./dto/song.dto";
+import ArtistService from "@server/artists/artists.service";
 
 @Injectable()
 class SongsService {
-  constructor(private readonly songsRepository: SongsRepository) {}
+  constructor(
+    private readonly songsRepository: SongsRepository,
+    private readonly artistService: ArtistService,
+  ) {}
 
   async getSongsByArtistId(artistId: number, page: number, limit: number) {
     try {
@@ -14,31 +23,51 @@ class SongsService {
         limit,
       );
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        "Something went wrong",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getSongById(id: number) {
-    try {
-      return await this.songsRepository.getSongById(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status);
-    }
+    return await this.songsRepository.getSongById(id);
   }
 
   async createSong(songData: SongDto, artistId: number) {
     try {
+      // check if artistId is valid.
+      const targetArtist = await this.artistService.getArtistById(artistId);
+      if (!targetArtist) {
+        throw new NotFoundException();
+      }
+      // check if the tilte is uniques\
       return await this.songsRepository.create(songData, artistId);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        "Something went wrong",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async updateSong(id: number, songData: SongDto) {
     try {
+      // check if aritstId is valid
+      const targetArtist = await this.artistService.getArtistById(
+        songData.artistId,
+      );
+      if (!targetArtist) {
+        throw new NotFoundException();
+      }
+
+      // check if title is unique.
       return await this.songsRepository.update(id, songData);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        "Something went wrong",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -46,7 +75,10 @@ class SongsService {
     try {
       return await this.songsRepository.delete(id);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        "Something went wrong",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
