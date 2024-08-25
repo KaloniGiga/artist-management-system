@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { extractMessageFromError } from "@web/lib/utils";
 import {
   usePostUserMutation,
   usePutUserMutation,
@@ -52,12 +53,15 @@ export default function useAddEditUser({
     resolver: zodResolver(formSchema),
   });
 
+  const watchRole = form.watch("role_type");
+
   useEffect(() => {
+    form.reset();
     if (isEdit && editData) {
       form.setValue("first_name", editData.first_name);
       form.setValue("last_name", editData.last_name);
       form.setValue("email", editData.email);
-      form.setValue("dob", editData.dob);
+      form.setValue("dob", new Date(editData.dob));
       form.setValue("gender", editData.gender);
       form.setValue("phone", editData.phone);
       form.setValue("role_type", editData.role_type);
@@ -73,7 +77,8 @@ export default function useAddEditUser({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to update user.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to update user.");
         });
     } else {
       postUser(values)
@@ -82,7 +87,8 @@ export default function useAddEditUser({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to add user.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to add user.");
         });
     }
   };
@@ -93,5 +99,6 @@ export default function useAddEditUser({
     onSubmit,
     formSchema,
     form,
+    watchRole,
   };
 }

@@ -13,11 +13,11 @@ export default function useLogout() {
       .unwrap()
       .then(() => {
         dispatch(setLogout());
-        router.replace("/auth");
+        router.replace("/");
       })
       .catch(() => {
         dispatch(setLogout());
-        router.replace("/auth");
+        router.replace("/");
       });
   };
 

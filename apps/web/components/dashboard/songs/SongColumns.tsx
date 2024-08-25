@@ -1,7 +1,8 @@
 "use client";
-import { SongData } from "@web/types/types";
+import { GenreEnum, SongData } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { EditDeleteSongOptions } from "./EditDeleteSongOption";
+import { genreLabel } from "@web/lib/constant";
 
 export const songColumns: ColumnDef<SongData>[] = [
   {
@@ -19,6 +20,10 @@ export const songColumns: ColumnDef<SongData>[] = [
   {
     accessorKey: "genre",
     header: "Genre",
+    cell: ({ getValue }) => {
+      const value = getValue<GenreEnum>();
+      return <div>{genreLabel[value]}</div>;
+    },
   },
   {
     id: "actions",

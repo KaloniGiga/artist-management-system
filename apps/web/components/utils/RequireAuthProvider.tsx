@@ -17,12 +17,16 @@ export default function RequireAuthProvider({
   const { isLoading, data: userData } = useVerify();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
+  /**
+   * @description: if user is not authenticated, show login page,
+   */
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/");
     }
   }, [isAuthenticated]);
 
+  // show loading screen, while verifying the auth state from server.
   if (isLoading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
@@ -31,6 +35,9 @@ export default function RequireAuthProvider({
     );
   }
 
+  /**
+   * @description: if user is logged in, check if user has permission to access the route
+   */
   if (userData) {
     if (matchRoutes(userData.data.role_type, pathname, userData.data?.id)) {
       return <div>{children}</div>;

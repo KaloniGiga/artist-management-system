@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { extractMessageFromError } from "@web/lib/utils";
 import {
   usePostArtistMutation,
   usePutArtistMutation,
@@ -39,6 +40,7 @@ export default function useAddEditArtist({
   });
 
   useEffect(() => {
+    form.reset();
     if (isEdit && editData) {
       form.setValue("name", editData.name);
       form.setValue("dob", editData.dob);
@@ -58,9 +60,8 @@ export default function useAddEditArtist({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(
-            error.message ? error.message : "Failed to update artist.",
-          );
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to update artist.");
         });
     } else {
       postArtist(values)
@@ -69,7 +70,8 @@ export default function useAddEditArtist({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to add artist.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to add artist.");
         });
     }
   };

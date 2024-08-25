@@ -1,6 +1,8 @@
 "use client";
+import { extractMessageFromError } from "@web/lib/utils";
 import { useDeleteSongMutation } from "@web/redux/song/song.api";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface IDeleteSong {
   rowId: number;
@@ -17,6 +19,10 @@ export default function useDeleteSong({ rowId }: IDeleteSong) {
         .unwrap()
         .then(() => {
           handleDialogClose();
+        })
+        .catch((error) => {
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to delete song.");
         });
     }
   };

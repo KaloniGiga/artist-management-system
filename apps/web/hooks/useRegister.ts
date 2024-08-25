@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { extractMessageFromError } from "@web/lib/utils";
 import { useRegisterUserMutation } from "@web/redux/auth/auth.api";
 import { GenderEnum, RoleEnum } from "@web/types/types";
 import { useRouter } from "next/navigation";
@@ -43,11 +44,11 @@ export default function useRegister() {
     register(values)
       .unwrap()
       .then(() => {
-        // dispatch(setAuth());
         router.push("/");
       })
-      .catch(() => {
-        toast.error("Failed to log in");
+      .catch((error) => {
+        const errMsg = extractMessageFromError(error);
+        toast.error(errMsg ? errMsg : "Failed to register");
       });
   };
 

@@ -52,6 +52,7 @@ export class AuthenticationService {
         );
       }
       await this.verifyPassword(plainTextPassword, user.password);
+
       user.password = undefined;
       return user;
     } catch (error) {
@@ -66,7 +67,7 @@ export class AuthenticationService {
     plainTextPassword: string,
     hashedPassword: string,
   ) {
-    const isPasswordMatching = compareHashAndText(
+    const isPasswordMatching = await compareHashAndText(
       plainTextPassword,
       hashedPassword,
     );

@@ -4,6 +4,7 @@ import InputUI from "../core/input/InputUI";
 import SelectUI from "../core/select/SelectUI";
 import { SongData } from "@web/types/types";
 import useAddEditSong from "@web/hooks/useAddEditSong";
+import { selectGenreList } from "@web/lib/constant";
 
 interface ISongForm {
   isEdit: boolean;
@@ -48,7 +49,7 @@ export default function SongForm({
         label={"Enter Genre"}
         placeholder="RNB"
         disabled={postLoading || putLoading}
-        selectItem={[]}
+        selectItem={selectGenreList}
       />
     </FormLayout>
   );

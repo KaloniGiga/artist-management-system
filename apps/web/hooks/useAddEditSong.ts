@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { extractMessageFromError } from "@web/lib/utils";
 import {
   usePostSongMutation,
   usePutSongMutation,
@@ -41,6 +42,7 @@ export default function useAddEditSong({
   });
 
   useEffect(() => {
+    form.reset();
     if (isEdit && editData) {
       form.setValue("title", editData.title);
       form.setValue("album_name", editData.album_name);
@@ -56,7 +58,8 @@ export default function useAddEditSong({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to update song.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to update song.");
         });
     } else {
       postSong(values)
@@ -65,7 +68,8 @@ export default function useAddEditSong({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to add song.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to add song.");
         });
     }
   };

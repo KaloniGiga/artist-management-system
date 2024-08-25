@@ -1,7 +1,8 @@
 "use client";
-import { UserData } from "@web/types/types";
+import { GenderEnum, RoleEnum, UserData } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { EditDeleteUserOptions } from "./EditDeleteUserOptions";
+import { genderLabel, userRoleLabel } from "@web/lib/constant";
 
 export const userColumns: ColumnDef<UserData>[] = [
   {
@@ -19,10 +20,18 @@ export const userColumns: ColumnDef<UserData>[] = [
   {
     accessorKey: "role_type",
     header: "Role",
+    cell: ({ getValue }) => {
+      const value = getValue<RoleEnum>();
+      return <div>{userRoleLabel[value]}</div>;
+    },
   },
   {
     accessorKey: "gender",
     header: "Gender",
+    cell: ({ getValue }) => {
+      const value = getValue<GenderEnum>();
+      return <div>{genderLabel[value]}</div>;
+    },
   },
   {
     id: "actions",
