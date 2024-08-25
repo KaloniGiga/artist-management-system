@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { forwardRoute } from "@web/lib/access-routes";
 import { useReadLoginMutation } from "@web/redux/auth/auth.api";
 import { setAuth } from "@web/redux/auth/auth.slice";
 import { useAppDispatch } from "@web/redux/hooks";
@@ -29,12 +30,17 @@ export default function useLogin() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     login(values)
       .unwrap()
-      .then(() => {
+      .then((data) => {
         dispatch(setAuth());
-        router.push("/dashboard");
+        const targetRoute = forwardRoute[data.data.role_type];
+        router.push(
+          typeof targetRoute == "string"
+            ? targetRoute
+            : targetRoute(data.data.id),
+        );
       })
-      .catch(() => {
-        toast.error("Failed to log in");
+      .catch((error) => {
+        toast.error(error.message ? error.message : "Failed to log in");
       });
   };
 

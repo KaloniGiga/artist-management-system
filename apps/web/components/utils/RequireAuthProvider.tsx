@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import useVerify from "@web/hooks/useVerify";
 import { useAppSelector } from "@web/redux/hooks";
+import { matchRoutes } from "@web/lib/access-routes";
 
 export default function RequireAuthProvider({
   children,
@@ -12,7 +13,8 @@ export default function RequireAuthProvider({
   children: ReactNode;
 }) {
   const router = useRouter();
-  const { isLoading, data } = useVerify();
+  const pathname = usePathname();
+  const { isLoading, data: userData } = useVerify();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
@@ -29,7 +31,11 @@ export default function RequireAuthProvider({
     );
   }
 
-  if (data) {
-    return <div>{children}</div>;
+  if (userData) {
+    if (matchRoutes(userData.data.role_type, pathname, userData.data?.id)) {
+      return <div>{children}</div>;
+    } else {
+      router.push("/403");
+    }
   }
 }
