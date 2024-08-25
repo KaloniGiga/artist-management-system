@@ -28,6 +28,7 @@ export const authApi = baseApi.injectEndpoints({
         url: "v1/auth/log-out",
         method: "POST",
       }),
+      invalidatesTags: ["Auth"],
     }),
     getUser: builder.query<AuthenticateResponse, void>({
       query: () => ({

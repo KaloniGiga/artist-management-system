@@ -7,7 +7,7 @@ import { useParams, usePathname } from "next/navigation";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { Button } from "@web/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { AddEditSongDialog } from "../dialogs/AddEditSongDialog";
+import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
 import { useGetSongsQuery } from "@web/redux/song/song.api";
 import { useState } from "react";
 

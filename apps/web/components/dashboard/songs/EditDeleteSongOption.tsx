@@ -1,34 +1,23 @@
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
-import { useEffect, useState } from "react";
-import DeleteDialog from "../dialogs/DeleteDialog";
+import DeleteDialog from "../../dialog/DeleteDialog";
 import { SongData } from "@web/types/types";
-import { AddEditSongDialog } from "../dialogs/AddEditSongDialog";
-import { useDeleteSongMutation } from "@web/redux/song/song.api";
+import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
+import useDeleteSong from "@web/hooks/useDeleteSong";
 
 interface IEditDeleteSongOptions {
   rowData: SongData;
 }
 export function EditDeleteSongOptions({ rowData }: IEditDeleteSongOptions) {
-  const [open, setOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+  const {
+    open,
+    setOpen,
+    isLoading,
+    isDeleteClicked,
+    setIsDeleteClicked,
+    handleDialogClose,
+    handleConfirmDelete,
+  } = useDeleteSong({ rowId: rowData?.id });
 
-  const [deleteSong, { isLoading, isSuccess }] = useDeleteSongMutation();
-
-  const handleConfirmDelete = () => {
-    if (rowData.id) {
-      deleteSong(rowData.id);
-    }
-  };
-
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      handleDialogClose();
-    }
-  }, [isSuccess]);
   return (
     <ActionDropdown
       open={open}

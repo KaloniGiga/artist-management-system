@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useGetUserQuery } from "../../redux/auth/auth.api";
+import { useGetUserQuery } from "@web/redux/auth/auth.api";
 
 export default function RequireAuthProvider({
   children,
@@ -11,13 +11,14 @@ export default function RequireAuthProvider({
   children: ReactNode;
 }) {
   const router = useRouter();
-  const { isLoading, error, isSuccess } = useGetUserQuery();
+  const { isLoading, isSuccess, isError } = useGetUserQuery();
 
   useEffect(() => {
-    if (error) {
+    if (isError) {
+      console.log(isError);
       router.replace("/");
     }
-  }, [error, router]);
+  }, [isError]);
 
   if (isLoading) {
     return (

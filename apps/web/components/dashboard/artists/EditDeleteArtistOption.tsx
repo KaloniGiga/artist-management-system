@@ -1,35 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
-import { useEffect, useState } from "react";
-import DeleteDialog from "../dialogs/DeleteDialog";
-import { AddEditArtistDialog } from "../dialogs/AddEditArtistDialog";
+import DeleteDialog from "../../dialog/DeleteDialog";
+import { AddEditArtistDialog } from "../../dialog/AddEditArtistDialog";
 import { ArtistData } from "../../../types/types";
-import { useDeleteArtistMutation } from "@web/redux/artist/artist.api";
+import useDeleteArtist from "@web/hooks/useDeleteArtist";
 
 interface IEditDeleteArtistOptions {
   rowData: ArtistData;
 }
 export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
-  const [open, setOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-
-  const [deleteArtist, { isLoading, isSuccess }] = useDeleteArtistMutation();
-
-  const handleConfirmDelete = () => {
-    if (rowData.id) {
-      deleteArtist(rowData.id);
-    }
-  };
-
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      handleDialogClose();
-    }
-  }, [isSuccess]);
+  const {
+    open,
+    setOpen,
+    isLoading,
+    isDeleteClicked,
+    setIsDeleteClicked,
+    handleDialogClose,
+    handleConfirmDelete,
+  } = useDeleteArtist({ rowId: rowData?.id });
   return (
     <ActionDropdown
       open={open}

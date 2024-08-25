@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import React from "react";
 import { Provider } from "react-redux";
-import { makeStore, AppStore } from "./store";
+import { makeStore, AppStore } from "../../redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 

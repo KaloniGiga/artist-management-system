@@ -1,4 +1,4 @@
-import { Navbar } from "@web/components/dashboard/header/Navbar";
+import { Navbar } from "@web/components/header/Navbar";
 import RequireAuthProvider from "@web/components/utils/RequireAuthProvider";
 import { ReactNode } from "react";
 
