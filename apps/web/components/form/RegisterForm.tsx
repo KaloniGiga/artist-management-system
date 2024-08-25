@@ -5,6 +5,7 @@ import InputUI from "../core/input/InputUI";
 import SelectUI from "../core/select/SelectUI";
 import useRegister from "@web/hooks/useRegister";
 import { DatePicker } from "../core/date-picker/DatePicker";
+import { selectGenderList, selectUserRoleList } from "@web/lib/constant";
 
 export default function RegisterForm() {
   const { formSchema, isLoading, onSubmit, form } = useRegister();
@@ -53,25 +54,20 @@ export default function RegisterForm() {
         placeholder="password"
       />
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="grid gap-2">
-          <InputUI
-            control={form.control}
-            name="phone"
-            label="Phone"
-            disabled={isLoading}
-            placeholder="9848123456"
-          />
-        </div>
-        <div className="grid gap-2">
-          <DatePicker
-            control={form.control}
-            name="dob"
-            label="Date of Birth"
-            disabled={isLoading}
-          />
-        </div>
-      </div>
+      <InputUI
+        control={form.control}
+        name="phone"
+        label="Phone"
+        disabled={isLoading}
+        placeholder="9848123456"
+      />
+
+      <DatePicker
+        control={form.control}
+        name="dob"
+        label="Date of Birth"
+        disabled={isLoading}
+      />
 
       <SelectUI
         control={form.control}
@@ -79,7 +75,7 @@ export default function RegisterForm() {
         label={"Enter Gender"}
         placeholder="Male"
         disabled={isLoading}
-        selectItem={[]}
+        selectItem={selectGenderList}
       />
       <SelectUI
         control={form.control}
@@ -87,7 +83,7 @@ export default function RegisterForm() {
         label={"Enter Role"}
         placeholder="Super admin"
         disabled={isLoading}
-        selectItem={[]}
+        selectItem={selectUserRoleList}
       />
 
       <InputUI

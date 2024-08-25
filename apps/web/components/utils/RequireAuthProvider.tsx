@@ -3,7 +3,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useGetUserQuery } from "@web/redux/auth/auth.api";
+import useVerify from "@web/hooks/useVerify";
+import { useAppSelector } from "@web/redux/hooks";
 
 export default function RequireAuthProvider({
   children,
@@ -11,14 +12,14 @@ export default function RequireAuthProvider({
   children: ReactNode;
 }) {
   const router = useRouter();
-  const { isLoading, isSuccess, isError } = useGetUserQuery();
+  const { isLoading, data } = useVerify();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    if (isError) {
-      console.log(isError);
+    if (!isAuthenticated) {
       router.replace("/");
     }
-  }, [isError]);
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -28,7 +29,7 @@ export default function RequireAuthProvider({
     );
   }
 
-  if (isSuccess) {
+  if (data) {
     return <div>{children}</div>;
   }
 }

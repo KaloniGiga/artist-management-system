@@ -5,6 +5,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query";
 import { isFetchBaseQueryError } from "@web/lib/utils";
+import { setLogout } from "../auth/auth.slice";
 
 export const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_SERVER_URL,
@@ -16,14 +17,11 @@ export const baseQueryWithReauth = async (
   api: BaseQueryApi,
   extraOptions: object,
 ) => {
-  let result = await baseQuery(args, api, extraOptions);
+  const result = await baseQuery(args, api, extraOptions);
 
   if (result.error && isFetchBaseQueryError(result.error)) {
     if (result.error.status == 401) {
-      console.log(result.error.status);
-      // window.location.href = "/";
-    } else {
-      result = await baseQuery(args, api, extraOptions);
+      api.dispatch(setLogout());
     }
   }
   return result;

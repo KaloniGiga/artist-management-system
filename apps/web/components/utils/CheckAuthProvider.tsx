@@ -3,7 +3,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useGetUserQuery } from "@web/redux/auth/auth.api";
+import { useAppSelector } from "@web/redux/hooks";
+import useVerify from "@web/hooks/useVerify";
 
 export default function CheckAuthProvider({
   children,
@@ -11,14 +12,14 @@ export default function CheckAuthProvider({
   children: ReactNode;
 }) {
   const router = useRouter();
-  const { isLoading, isSuccess, isError } = useGetUserQuery();
+  const { isLoading, error, isFetching } = useVerify();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    if (isSuccess) {
-      console.log(isSuccess);
+    if (isAuthenticated && !isFetching && !isLoading) {
       router.replace("/dashboard");
     }
-  }, [isSuccess]);
+  }, [isAuthenticated, isFetching, isLoading]);
 
   if (isLoading) {
     return (
@@ -28,7 +29,7 @@ export default function CheckAuthProvider({
     );
   }
 
-  if (isError) {
+  if (error) {
     return children;
   }
 }

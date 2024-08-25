@@ -8,8 +8,8 @@ import {
 
 export default function Home() {
   return (
-    <main className="w-full flex min-h-screen items-center justify-center">
-      <Card className="w-[80%] lg:max-w-md py-4 border-none">
+    <main className="w-full flex min-h-screen py-16 items-center justify-center">
+      <Card className="w-[80%] lg:max-w-md border-none">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">
             {"Sign up to get started!"}

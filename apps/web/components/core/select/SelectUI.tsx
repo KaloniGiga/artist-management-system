@@ -36,7 +36,7 @@ export default function SelectUI<T extends FieldValues>({
             onValueChange={field.onChange}
             value={field.value}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>

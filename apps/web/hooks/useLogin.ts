@@ -1,6 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useReadLoginMutation } from "@web/redux/auth/auth.api";
+import { setAuth } from "@web/redux/auth/auth.slice";
+import { useAppDispatch } from "@web/redux/hooks";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,6 +19,7 @@ const formSchema = z.object({
 });
 export default function useLogin() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [login, { isLoading }] = useReadLoginMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -27,7 +30,7 @@ export default function useLogin() {
     login(values)
       .unwrap()
       .then(() => {
-        // dispatch(setAuth());
+        dispatch(setAuth());
         router.push("/dashboard");
       })
       .catch(() => {
