@@ -2,22 +2,26 @@
 "use client";
 import { TableLayout } from "@web/components/core/data-table/TableLayout";
 import { userColumns } from "./UserColumns";
-import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
-import { Button } from "@web/components/ui/button";
-import { PlusCircle } from "lucide-react";
 import { AddEditUserDialog } from "../../dialog/AddEditUserDialog";
 import { useGetUsersQuery } from "@web/redux/user/user.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DialogLayout from "../../dialog/DialogLayout";
 
 export function UserPage() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
+  const [pageCount, setPageCount] = useState(0);
   const [open, setOpen] = useState(false);
   const { isLoading, data: userData } = useGetUsersQuery({
     page: page,
     limit: limit,
   });
+
+  useEffect(() => {
+    if (userData) {
+      setPageCount(Number(userData.data.totalRows));
+    }
+  }, [userData]);
 
   const handleDialogClose = () => {
     setOpen(false);
@@ -29,9 +33,12 @@ export function UserPage() {
       description={
         "The User Table stores information about all users who have access to the Artist Management System"
       }
-      data={userData ? userData.data : []}
+      data={userData ? userData.data.users : []}
       columns={userColumns}
       loading={isLoading}
+      page={page}
+      limit={limit}
+      pageCount={pageCount}
     >
       <DialogLayout open={open} setOpen={setOpen} buttonLabel="Add" icon={true}>
         <AddEditUserDialog

@@ -12,9 +12,11 @@ import { hashAText } from "@server/common/utils/utils";
 class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async getAllUsers(page: number = 0, limit: number = 20) {
+  async getAllUsers(page: number = 0, limit: number = 10) {
     try {
-      return await this.usersRepository.getAllUser(page, limit);
+      const users = await this.usersRepository.getAllUser(page, limit);
+      const totalRows = await this.usersRepository.getTotalRows();
+      return { totalRows, users };
     } catch (error) {
       throw new HttpException(
         "Something went wrong",

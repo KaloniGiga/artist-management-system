@@ -10,10 +10,16 @@ class UsersRepository {
 
   async getAllUser(page: number, limit: number) {
     const databaseResponse = await this.databaseService.runQuery(
-      `SELECT * FROM users LIMIT $1 OFFSET $2`,
+      `SELECT * FROM users ORDER BY created_at ASC LIMIT $1 OFFSET $2`,
       [limit, page * limit],
     );
     return plainToInstance(UserModel, databaseResponse.rows);
+  }
+
+  async getTotalRows() {
+    const databaseResponse = await this.databaseService.runQuery(`
+      SELECT COUNT(*) as totalRowsCount FROM users`);
+    return databaseResponse.rows;
   }
 
   async getUserById(id: number) {

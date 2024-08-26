@@ -1,5 +1,5 @@
 "use client";
-import { Loader2 } from "lucide-react";
+// import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
 } from "../../ui/card";
 import { DataTable } from "./DataTable";
 import { ColumnDef } from "@tanstack/react-table";
+import useDataTables from "@web/hooks/useDataTable";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -20,6 +21,9 @@ interface ITableMetaData {
   description: string;
   children: React.ReactNode;
   loading: boolean;
+  page: number;
+  limit: number;
+  pageCount: number;
 }
 
 type TableLayoutProps<TData, TValue> = DataTableProps<TData, TValue> &
@@ -30,8 +34,12 @@ export function TableLayout<TData, TValue>({
   children,
   columns,
   data,
-  loading,
+  // loading,
+  pageCount,
+  page,
+  limit,
 }: TableLayoutProps<TData, TValue>) {
+  const { table } = useDataTables({ data, columns, pageCount, page, limit });
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -43,13 +51,13 @@ export function TableLayout<TData, TValue>({
           {children}
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {/* {loading ? (
             <div className="w-full h-full flex justify-center items-center">
               <Loader2 className="h-6 w-6 animate-spin" />
             </div>
-          ) : (
-            <DataTable data={data} columns={columns} />
-          )}
+          ) : ( */}
+          <DataTable columnsLength={columns.length} table={table} />
+          {/* )} */}
         </CardContent>
       </Card>
     </div>

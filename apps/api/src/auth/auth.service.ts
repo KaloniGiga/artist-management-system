@@ -55,6 +55,7 @@ export class AuthenticationService {
       }
       await this.verifyPassword(plainTextPassword, user.password);
 
+      console.log(user, plainTextPassword);
       return plainToInstance(UserModel, user);
     } catch (error) {
       throw new HttpException(
@@ -72,6 +73,7 @@ export class AuthenticationService {
       plainTextPassword,
       hashedPassword,
     );
+    console.log(isPasswordMatching);
     if (!isPasswordMatching) {
       throw new HttpException(
         "Wrong credentials provided",

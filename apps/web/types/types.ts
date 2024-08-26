@@ -89,7 +89,10 @@ export interface LogoutResponse extends SuccessResponse {
 }
 
 export interface UserQueryResponse extends SuccessResponse {
-  data: UserData[];
+  data: {
+    totalRows: number;
+    users: UserData[];
+  };
 }
 
 export interface UserMutationResponse extends SuccessResponse {
