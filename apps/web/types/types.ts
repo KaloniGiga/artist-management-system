@@ -9,6 +9,7 @@ export interface User {
   gender: GenderEnum;
   role_type: RoleEnum;
   address: string;
+  artistId?: number;
 }
 
 export interface UserData extends User {

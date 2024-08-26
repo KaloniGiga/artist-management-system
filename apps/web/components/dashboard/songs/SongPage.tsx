@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { TableLayout } from "@web/components/core/data-table/TableLayout";
-import { GenreEnum } from "@web/types/types";
+import { GenreEnum, RoleEnum } from "@web/types/types";
 import { songColumns } from "./SongColumns";
 import { useParams, usePathname } from "next/navigation";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
@@ -10,9 +10,11 @@ import { PlusCircle } from "lucide-react";
 import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
 import { useGetSongsQuery } from "@web/redux/song/song.api";
 import { useState } from "react";
+import { useGetUserQuery } from "@web/redux/auth/auth.api";
 
 export function SongPage() {
   const params = useParams();
+  const { data: userData } = useGetUserQuery();
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [open, setOpen] = useState(false);
@@ -35,19 +37,21 @@ export function SongPage() {
       columns={songColumns}
       loading={isLoading}
     >
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button size="sm" className="ml-auto gap-1">
-            Add
-            <PlusCircle className="h-4 w-4" />
-          </Button>
-        </DialogTrigger>
-        <AddEditSongDialog
-          handleDialogClose={handleDialogClose}
-          isEdit={false}
-          editData={null}
-        />
-      </Dialog>
+      {userData?.data.role_type !== RoleEnum.ARTISTMANAGER && (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="ml-auto gap-1">
+              Add
+              <PlusCircle className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
+          <AddEditSongDialog
+            handleDialogClose={handleDialogClose}
+            isEdit={false}
+            editData={null}
+          />
+        </Dialog>
+      )}
     </TableLayout>
   );
 }

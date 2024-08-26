@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { extractMessageFromError } from "@web/lib/utils";
+import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
 import {
   usePostUserMutation,
   usePutUserMutation,
@@ -18,34 +19,45 @@ interface Props {
   handleDialogClose: () => void;
 }
 
-const formSchema = z.object({
-  first_name: z.string().min(1, { message: "First name is required" }),
-  last_name: z.string().min(1, { message: "Last name is required" }),
-  email: z
-    .string()
-    .min(1, { message: "Email is required" })
-    .email("Email is invalid."),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
-  phone: z.string().refine(validator.isMobilePhone),
-  dob: z.date({
-    required_error: "A date of birth is required.",
-  }),
-  gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
-  role_type: z.enum([
-    RoleEnum.SUPERADMIN,
-    RoleEnum.ARTISTMANAGER,
-    RoleEnum.ARTIST,
-  ]),
-  address: z.string(),
-});
+const formSchema = z
+  .object({
+    first_name: z.string().min(1, { message: "First name is required" }),
+    last_name: z.string().min(1, { message: "Last name is required" }),
+    email: z
+      .string()
+      .min(1, { message: "Email is required" })
+      .email("Email is invalid."),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters.",
+    }),
+    phone: z.string().refine(validator.isMobilePhone),
+    dob: z.date({
+      required_error: "A date of birth is required.",
+    }),
+    gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
+    role_type: z.enum([
+      RoleEnum.SUPERADMIN,
+      RoleEnum.ARTISTMANAGER,
+      RoleEnum.ARTIST,
+    ]),
+    artistId: z.coerce.number().optional(),
+    address: z.string(),
+  })
+  .refine((data) => {
+    data.role_type == RoleEnum.ARTIST && data.artistId,
+      {
+        message: "ArtistId is required for Role Artist",
+        path: ["artistId"],
+      };
+  });
 
 export default function useAddEditUser({
   isEdit,
   editData,
   handleDialogClose,
 }: Props) {
+  // todo: make the artist query able to fetch all the data without pagination
+  const { data: artistsData } = useGetArtistsQuery({ page: 0, limit: 10 });
   const [postUser, { isLoading: postLoading }] = usePostUserMutation();
   const [putUser, { isLoading: putLoading }] = usePutUserMutation();
 
@@ -65,6 +77,10 @@ export default function useAddEditUser({
       form.setValue("gender", editData.gender);
       form.setValue("phone", editData.phone);
       form.setValue("role_type", editData.role_type);
+      form.setValue(
+        "artistId",
+        editData?.artistId ? editData.artistId : undefined,
+      );
       form.setValue("address", editData.address);
     }
   }, [isEdit, editData]);
@@ -100,5 +116,6 @@ export default function useAddEditUser({
     formSchema,
     form,
     watchRole,
+    artistsData,
   };
 }

@@ -3,7 +3,7 @@ import FormLayout from "./FormLayout";
 import InputUI from "../core/input/InputUI";
 import SelectUI from "../core/select/SelectUI";
 import { DatePicker } from "../core/date-picker/DatePicker";
-import { UserData } from "@web/types/types";
+import { RoleEnum, UserData } from "@web/types/types";
 import useAddEditUser from "@web/hooks/useAddEditUser";
 import { selectGenderList, selectUserRoleList } from "@web/lib/constant";
 
@@ -18,8 +18,15 @@ export default function UserForm({
   editData,
   handleDialogClose,
 }: ISongForm) {
-  const { formSchema, postLoading, putLoading, onSubmit, form } =
-    useAddEditUser({ isEdit, editData, handleDialogClose });
+  const {
+    artistsData,
+    watchRole,
+    formSchema,
+    postLoading,
+    putLoading,
+    onSubmit,
+    form,
+  } = useAddEditUser({ isEdit, editData, handleDialogClose });
 
   return (
     <FormLayout<typeof formSchema>
@@ -102,6 +109,23 @@ export default function UserForm({
         disabled={putLoading || postLoading}
         selectItem={selectUserRoleList}
       />
+
+      {watchRole == RoleEnum.ARTIST && (
+        <SelectUI
+          control={form.control}
+          name="artistId"
+          label="Select Artist"
+          placeholder=""
+          disabled={putLoading || postLoading}
+          selectItem={
+            artistsData?.data
+              ? artistsData.data.map((item) => {
+                  return { value: item.id.toString(), label: item.name };
+                })
+              : []
+          }
+        />
+      )}
 
       <InputUI
         control={form.control}
