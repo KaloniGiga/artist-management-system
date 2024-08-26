@@ -39,7 +39,7 @@ class UsersRepository {
   async create(userData: UserDto) {
     const databaseResponse = await this.databaseService.runQuery(
       `
-         INSERT INTO users (first_name, last_name, email, password, phone, dob, gender, role_type, address) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETuRNING *
+         INSERT INTO users (first_name, last_name, email, password, phone, dob, gender, role_type, address, artist_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETuRNING *
         `,
       [
         userData.first_name,
@@ -51,6 +51,7 @@ class UsersRepository {
         userData.gender,
         userData.role_type,
         userData.address,
+        userData.artistId ? userData.artistId : null,
       ],
     );
 
@@ -61,7 +62,7 @@ class UsersRepository {
     const databaseResponse = await this.databaseService.runQuery(
       `
       UPDATE users
-      SET first_name = $2, last_name = $3, email = $4, phone = $5, dob = $6, gender = $7, role_type = $8, address = $9, password = $10 WHERE id = $1 RETURNING *
+      SET first_name = $2, last_name = $3, email = $4, phone = $5, dob = $6, gender = $7, role_type = $8, address = $9, password = $10, artist_id = $11 WHERE id = $1 RETURNING *
       `,
       [
         id,
@@ -74,6 +75,7 @@ class UsersRepository {
         userData.role_type,
         userData.address,
         userData.password,
+        userData.artistId ? userData.artistId : null,
       ],
     );
     const entity = databaseResponse.rows[0];

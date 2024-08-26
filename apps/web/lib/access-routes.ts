@@ -48,5 +48,6 @@ export const matchRoutes = (
 export const forwardRoute = {
   [RoleEnum.SUPERADMIN]: "/dashboard",
   [RoleEnum.ARTISTMANAGER]: "/dashboard/artists",
-  [RoleEnum.ARTIST]: (artistId: number) => `/dashboard/songs/${artistId}`,
+  [RoleEnum.ARTIST]: (artistId: number | null) =>
+    artistId ? `/dashboard/songs/${artistId}` : "/",
 };

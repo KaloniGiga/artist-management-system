@@ -43,12 +43,9 @@ const formSchema = z
     artistId: z.coerce.number().optional(),
     address: z.string(),
   })
-  .refine((data) => {
-    data.role_type == RoleEnum.ARTIST && data.artistId,
-      {
-        message: "ArtistId is required for Role Artist",
-        path: ["artistId"],
-      };
+  .refine((data) => !(data.role_type == RoleEnum.ARTIST && !data.artistId), {
+    message: "ArtistId is required for Role Artist",
+    path: ["artistId"],
   });
 
 export default function useAddEditUser({
@@ -68,6 +65,7 @@ export default function useAddEditUser({
   const watchRole = form.watch("role_type");
 
   useEffect(() => {
+    console.log(editData);
     form.reset();
     if (isEdit && editData) {
       form.setValue("first_name", editData.first_name);
@@ -77,15 +75,13 @@ export default function useAddEditUser({
       form.setValue("gender", editData.gender);
       form.setValue("phone", editData.phone);
       form.setValue("role_type", editData.role_type);
-      form.setValue(
-        "artistId",
-        editData?.artistId ? editData.artistId : undefined,
-      );
+      form.setValue("artistId", editData.artistId);
       form.setValue("address", editData.address);
     }
   }, [isEdit, editData]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
     if (isEdit && editData) {
       putUser({ id: editData.id, userDetails: values })
         .unwrap()

@@ -39,10 +39,12 @@ export default function RequireAuthProvider({
    * @description: if user is logged in, check if user has permission to access the route
    */
   if (userData) {
-    if (matchRoutes(userData.data.role_type, pathname, userData.data?.id)) {
+    if (
+      matchRoutes(userData.data.role_type, pathname, userData.data?.artistId)
+    ) {
       return <div>{children}</div>;
     } else {
-      router.push("/403");
+      router.push("/404");
     }
   }
 }

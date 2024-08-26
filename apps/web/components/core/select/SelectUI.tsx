@@ -29,13 +29,12 @@ export default function SelectUI<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => {
-        console.log(field, field.value);
         return (
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <Select
               disabled={disabled}
-              value={field.value}
+              value={field.value?.toString()}
               onValueChange={(value) => {
                 if (value) {
                   field.onChange(value);

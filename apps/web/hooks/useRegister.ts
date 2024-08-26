@@ -24,11 +24,9 @@ const formSchema = z.object({
     required_error: "A date of birth is required.",
   }),
   gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
-  role_type: z.enum([
-    RoleEnum.SUPERADMIN,
-    RoleEnum.ARTISTMANAGER,
-    RoleEnum.ARTIST,
-  ]),
+  role_type: z
+    .enum([RoleEnum.SUPERADMIN, RoleEnum.ARTISTMANAGER, RoleEnum.ARTIST])
+    .default(RoleEnum.SUPERADMIN),
   address: z.string(),
 });
 
@@ -36,14 +34,17 @@ export default function useRegister() {
   const router = useRouter();
   const [register, { isLoading }] = useRegisterUserMutation();
 
+  // the default role for user registration is super admin
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: { role_type: RoleEnum.SUPERADMIN },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     register(values)
       .unwrap()
       .then(() => {
+        toast.success("Registration successful.");
         router.push("/");
       })
       .catch((error) => {

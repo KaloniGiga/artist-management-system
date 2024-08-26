@@ -3,12 +3,15 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
   IsString,
   MinLength,
 } from "class-validator";
 import { RoleEnum } from "../types/types";
 import { ApiProperty } from "@nestjs/swagger";
 import { GenderEnum } from "@server/common/types/types";
+import { Type } from "class-transformer";
 
 class UserDto {
   @ApiProperty()
@@ -52,6 +55,13 @@ class UserDto {
   @IsEnum(RoleEnum)
   @IsNotEmpty()
   role_type: RoleEnum;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  @Type(() => Number)
+  artistId?: number;
 
   @ApiProperty()
   @IsString()

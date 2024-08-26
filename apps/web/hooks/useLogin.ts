@@ -33,11 +33,20 @@ export default function useLogin() {
       .unwrap()
       .then((data) => {
         dispatch(setAuth());
+        // superadmin and aritst manager roles will return string and
+        // artist role will return function which constructs new route with artistId
         const forwardToRouteOrFunction = forwardRoute[data.data.role_type];
         const targetRoute =
           typeof forwardToRouteOrFunction == "string"
             ? forwardToRouteOrFunction
-            : forwardToRouteOrFunction(data.data.id);
+            : forwardToRouteOrFunction(
+                data.data.artistId ? data.data.artistId : null,
+              );
+        // if user with artist role has no valid artist id, show message;
+        if (targetRoute == "/") {
+          toast.error("Invalid credentails");
+          return;
+        }
         router.push(targetRoute);
       })
       .catch((error) => {

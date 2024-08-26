@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -26,19 +28,26 @@ import { ResponseMessage } from "@server/common/decorators/response-message.deco
 class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
-  @Get()
+  @Get("artist/:artistId")
   @UseGuards(JwtAuthenticationGuard, RoleGuard)
-  @Roles(RoleEnum.ARTISTMANAGER)
+  @Roles(RoleEnum.ARTISTMANAGER, RoleEnum.ARTIST)
   @ApiOperation({
     summary: "Get songs",
     description: "Get songs of artist with pagination",
   })
   @ResponseMessage("Songs fetched successfully")
   async getSongsByArtistId(
-    @Query("artistId", ParseIntPipe) artistId: number,
+    @Req() request: RequestWithUser,
+    @Param("artistId", ParseIntPipe) artistId: number,
     @Query("page", ParseIntPipe) page: number,
     @Query("limit", ParseIntPipe) limit: number,
   ) {
+    if (
+      request.user.role == RoleEnum.ARTIST &&
+      request.user.artistId !== artistId
+    ) {
+      throw new HttpException("Access denied", HttpStatus.FORBIDDEN);
+    }
     return await this.songsService.getSongsByArtistId(artistId, page, limit);
   }
 

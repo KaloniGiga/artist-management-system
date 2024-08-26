@@ -15,7 +15,11 @@ class SongsService {
     private readonly artistService: ArtistService,
   ) {}
 
-  async getSongsByArtistId(artistId: number, page: number, limit: number) {
+  async getSongsByArtistId(
+    artistId: number,
+    page: number = 0,
+    limit: number = 10,
+  ) {
     try {
       return await this.songsRepository.getSongsByArtistId(
         artistId,

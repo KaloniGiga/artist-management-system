@@ -28,7 +28,9 @@ export default function CheckAuthProvider({
       const targetRoute =
         typeof forwardToRouteOrFunction == "string"
           ? forwardToRouteOrFunction
-          : forwardToRouteOrFunction(userData.data.id);
+          : forwardToRouteOrFunction(
+              userData.data.artistId ? userData.data.artistId : null,
+            );
       router.push(targetRoute);
     }
   }, [isAuthenticated, isFetching, isLoading, userData]);

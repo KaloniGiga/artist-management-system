@@ -36,9 +36,6 @@ class ArtistRepository {
       [name],
     );
     const entity = databaseResponse.rows[0];
-    if (!entity) {
-      throw new NotFoundException();
-    }
     return plainToInstance(ArtistModel, entity);
   }
 
