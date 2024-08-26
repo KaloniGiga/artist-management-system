@@ -89,7 +89,10 @@ export interface LogoutResponse extends SuccessResponse {
 }
 
 export interface UserQueryResponse extends SuccessResponse {
-  data: UserData[];
+  data: {
+    totalRows: number;
+    users: UserData[];
+  };
 }
 
 export interface UserMutationResponse extends SuccessResponse {
@@ -97,7 +100,10 @@ export interface UserMutationResponse extends SuccessResponse {
 }
 
 export interface ArtistQueryResponse extends SuccessResponse {
-  data: ArtistData[];
+  data: {
+    totalRows: number;
+    artists: ArtistData[];
+  };
 }
 
 export interface ArtistMutationResponse extends SuccessResponse {
@@ -105,7 +111,10 @@ export interface ArtistMutationResponse extends SuccessResponse {
 }
 
 export interface SongQueryResponse extends SuccessResponse {
-  data: SongData[];
+  data: {
+    songs: SongData[];
+    totalRows: number;
+  };
 }
 
 export interface SongMutationResponse extends SuccessResponse {

@@ -1,55 +1,51 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { TableLayout } from "@web/components/core/data-table/TableLayout";
-import { GenreEnum, RoleEnum } from "@web/types/types";
+import { RoleEnum } from "@web/types/types";
 import { songColumns } from "./SongColumns";
-import { useParams, usePathname } from "next/navigation";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { Button } from "@web/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
-import { useGetSongsQuery } from "@web/redux/song/song.api";
-import { useState } from "react";
-import { useGetUserQuery } from "@web/redux/auth/auth.api";
+
+import useSongPage from "@web/hooks/useSongPage";
 
 export function SongPage() {
-  const params = useParams();
-  const { data: userData } = useGetUserQuery();
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
-  const [open, setOpen] = useState(false);
-  const artistId = Number(params.artistId as unknown as string);
-  const { isLoading, data: songData } = useGetSongsQuery({
-    artistId: artistId,
-    limit: limit,
-    page: page,
-  });
-
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
+  const {
+    isLoading,
+    songData,
+    openDialog,
+    handleOpenDialog,
+    pageIndex,
+    pageSize,
+    setPagination,
+    handleAddSong,
+    userInfo,
+  } = useSongPage();
 
   return (
     <TableLayout
       title={"Songs List"}
       description={"This table contains the list of songs of artist."}
-      data={songData ? songData.data : []}
+      data={songData ? songData.data.songs : []}
       columns={songColumns}
       loading={isLoading}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      setPagination={setPagination}
+      pageCount={
+        songData ? Math.ceil(Number(songData.data.totalRows) / pageSize) : -1
+      }
     >
-      {userData?.data.role_type !== RoleEnum.ARTISTMANAGER && (
-        <Dialog open={open} onOpenChange={setOpen}>
+      {userInfo?.role_type !== RoleEnum.ARTISTMANAGER && (
+        <Dialog open={openDialog} onOpenChange={handleOpenDialog}>
           <DialogTrigger asChild>
-            <Button size="sm" className="ml-auto gap-1">
+            <Button onClick={handleAddSong} size="sm" className="ml-auto gap-1">
               Add
               <PlusCircle className="h-4 w-4" />
             </Button>
           </DialogTrigger>
-          <AddEditSongDialog
-            handleDialogClose={handleDialogClose}
-            isEdit={false}
-            editData={null}
-          />
+          <AddEditSongDialog />
         </Dialog>
       )}
     </TableLayout>

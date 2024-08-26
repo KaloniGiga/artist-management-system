@@ -2,23 +2,12 @@
 import FormLayout from "./FormLayout";
 import InputUI from "../core/input/InputUI";
 import SelectUI from "../core/select/SelectUI";
-import { SongData } from "@web/types/types";
 import useAddEditSong from "@web/hooks/useAddEditSong";
 import { selectGenreList } from "@web/lib/constant";
 
-interface ISongForm {
-  isEdit: boolean;
-  editData: SongData | null;
-  handleDialogClose: () => void;
-}
-
-export default function SongForm({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: ISongForm) {
+export default function SongForm() {
   const { formSchema, postLoading, putLoading, onSubmit, form } =
-    useAddEditSong({ isEdit, editData, handleDialogClose });
+    useAddEditSong();
 
   return (
     <FormLayout<typeof formSchema>
@@ -47,7 +36,7 @@ export default function SongForm({
         control={form.control}
         name="genre"
         label={"Enter Genre"}
-        placeholder="RNB"
+        placeholder=""
         disabled={postLoading || putLoading}
         selectItem={selectGenreList}
       />

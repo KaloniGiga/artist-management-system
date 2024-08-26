@@ -1,24 +1,47 @@
 "use client";
 import { extractMessageFromError } from "@web/lib/utils";
+import {
+  setSongDialogOpen,
+  setSongEditData,
+  setSongIsEdit,
+} from "@web/redux/dialog/song-dialog.slice";
+import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
 import { useDeleteSongMutation } from "@web/redux/song/song.api";
+import { SongData } from "@web/types/types";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface IDeleteSong {
   rowId: number;
+  rowData: SongData;
 }
-export default function useDeleteSong({ rowId }: IDeleteSong) {
-  const [open, setOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+export default function useDeleteSong({ rowId, rowData }: IDeleteSong) {
+  const dispatch = useAppDispatch();
+  const { openDialog } = useAppSelector((state) => state.songDialog);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   const [deleteSong, { isLoading }] = useDeleteSongMutation();
+
+  const handleEditDialog = (open: boolean) => {
+    dispatch(setSongDialogOpen(open));
+  };
+
+  const handleEditSong = () => {
+    handleEditDialog(true);
+    dispatch(setSongEditData(rowData));
+    dispatch(setSongIsEdit(true));
+  };
+
+  const handleDeleteSong = () => {
+    setDeleteDialog(true);
+  };
 
   const handleConfirmDelete = () => {
     if (rowId) {
       deleteSong(rowId)
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          setDeleteDialog(false);
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);
@@ -27,17 +50,14 @@ export default function useDeleteSong({ rowId }: IDeleteSong) {
     }
   };
 
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
-
   return {
-    open,
-    setOpen,
-    isDeleteClicked,
-    setIsDeleteClicked,
+    openDialog,
+    handleEditDialog,
+    deleteDialog,
+    setDeleteDialog,
     isLoading,
     handleConfirmDelete,
-    handleDialogClose,
+    handleEditSong,
+    handleDeleteSong,
   };
 }

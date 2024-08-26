@@ -1,22 +1,18 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { extractMessageFromError } from "@web/lib/utils";
+import { setSongDialogOpen } from "@web/redux/dialog/song-dialog.slice";
+import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
 import {
   usePostSongMutation,
   usePutSongMutation,
 } from "@web/redux/song/song.api";
-import { GenreEnum, SongData } from "@web/types/types";
+import { GenreEnum } from "@web/types/types";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
-interface Props {
-  isEdit: boolean;
-  editData: SongData | null;
-  handleDialogClose: () => void;
-}
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -30,11 +26,9 @@ const formSchema = z.object({
   ]),
 });
 
-export default function useAddEditSong({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: Props) {
+export default function useAddEditSong() {
+  const dispatch = useAppDispatch();
+  const { isEdit, editData } = useAppSelector((state) => state.songDialog);
   const params = useParams();
   const artistId = Number(params.artistId);
   const [postSong, { isLoading: postLoading }] = usePostSongMutation();
@@ -61,7 +55,7 @@ export default function useAddEditSong({
       })
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          dispatch(setSongDialogOpen(false));
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);
@@ -70,13 +64,13 @@ export default function useAddEditSong({
     } else {
       // check if artistId is valid number.
       if (!artistId || isNaN(artistId)) {
-        toast.error("Artist is invalid.");
+        toast.error("Song is invalid.");
         return;
       }
       postSong({ ...values, artistId: artistId })
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          dispatch(setSongDialogOpen(false));
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);

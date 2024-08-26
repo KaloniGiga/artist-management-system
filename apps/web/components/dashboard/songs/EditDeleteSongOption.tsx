@@ -1,7 +1,6 @@
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
 import DeleteDialog from "../../dialog/DeleteDialog";
 import { RoleEnum, SongData } from "@web/types/types";
-import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
 import useDeleteSong from "@web/hooks/useDeleteSong";
 import { useAppSelector } from "@web/redux/hooks";
 
@@ -10,39 +9,31 @@ interface IEditDeleteSongOptions {
 }
 export function EditDeleteSongOptions({ rowData }: IEditDeleteSongOptions) {
   const { userInfo } = useAppSelector((state) => state.auth);
+
   const {
-    open,
-    setOpen,
     isLoading,
-    isDeleteClicked,
-    setIsDeleteClicked,
-    handleDialogClose,
+    deleteDialog,
+    setDeleteDialog,
+    handleEditSong,
+    handleDeleteSong,
     handleConfirmDelete,
-  } = useDeleteSong({ rowId: rowData?.id });
+  } = useDeleteSong({ rowId: rowData?.id, rowData: rowData });
 
   return (
     <>
       {userInfo && userInfo.role_type !== RoleEnum.ARTISTMANAGER && (
         <ActionDropdown
-          open={open}
-          setOpen={setOpen}
-          setIsDeleteClicked={setIsDeleteClicked}
+          open={deleteDialog}
+          handleDeleteDialog={setDeleteDialog}
+          handleEditClick={handleEditSong}
+          handleDeleteClick={handleDeleteSong}
         >
-          {!isDeleteClicked && (
-            <AddEditSongDialog
-              handleDialogClose={handleDialogClose}
-              isEdit={true}
-              editData={rowData}
-            />
-          )}
-          {isDeleteClicked && (
-            <DeleteDialog
-              loading={isLoading}
-              titleKey={"song"}
-              handleCancelDelete={handleDialogClose}
-              handleConfirmDelete={handleConfirmDelete}
-            />
-          )}
+          <DeleteDialog
+            loading={isLoading}
+            titleKey={"song"}
+            handleDeleteDialog={setDeleteDialog}
+            handleConfirmDelete={handleConfirmDelete}
+          />
         </ActionDropdown>
       )}
     </>

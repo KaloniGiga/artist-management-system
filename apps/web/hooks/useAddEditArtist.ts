@@ -5,17 +5,14 @@ import {
   usePostArtistMutation,
   usePutArtistMutation,
 } from "@web/redux/artist/artist.api";
-import { ArtistData, GenderEnum } from "@web/types/types";
+import { setArtistDialogOpen } from "@web/redux/dialog/artist-dialog.slice";
+import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
+import { GenderEnum } from "@web/types/types";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-interface Props {
-  isEdit: boolean;
-  editData: ArtistData | null;
-  handleDialogClose: () => void;
-}
 const formSchema = z.object({
   name: z.string().min(1, { message: "Title is required" }),
   dob: z.date({
@@ -27,11 +24,9 @@ const formSchema = z.object({
   no_of_albums_released: z.coerce.number(),
 });
 
-export default function useAddEditArtist({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: Props) {
+export default function useAddEditArtist() {
+  const dispatch = useAppDispatch();
+  const { isEdit, editData } = useAppSelector((state) => state.artistDialog);
   const [postArtist, { isLoading: postLoading }] = usePostArtistMutation();
   const [putArtist, { isLoading: putLoading }] = usePutArtistMutation();
 
@@ -45,7 +40,7 @@ export default function useAddEditArtist({
       form.setValue("name", editData.name);
       form.setValue("dob", editData.dob);
       form.setValue("gender", editData.gender);
-      form.setValue("dob", editData.dob);
+      form.setValue("dob", new Date(editData.dob));
       form.setValue("first_release_year", editData.first_release_year);
       form.setValue("no_of_albums_released", editData.no_of_albums_released);
       form.setValue("address", editData.address);
@@ -57,7 +52,7 @@ export default function useAddEditArtist({
       putArtist({ id: editData.id, artistDetails: values })
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          dispatch(setArtistDialogOpen(false));
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);
@@ -67,7 +62,7 @@ export default function useAddEditArtist({
       postArtist(values)
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          dispatch(setArtistDialogOpen(false));
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);

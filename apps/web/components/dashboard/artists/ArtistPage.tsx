@@ -6,35 +6,72 @@ import { AddEditArtistDialog } from "../../dialog/AddEditArtistDialog";
 import { useState } from "react";
 import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
 import DialogLayout from "../../dialog/DialogLayout";
+import { Button } from "@web/components/ui/button";
+import * as Papa from "papaparse";
+import { Import } from "lucide-react";
+import ExportCSV from "@web/components/core/export-csv/ExportCSV";
+import ImportCSV from "@web/components/core/import-csv/import-csv";
+import { ArtistData } from "@web/types/types";
+import useArtistPage from "@web/hooks/useArtistPage";
+import useCSVExport from "@web/hooks/useCSVExport";
+
+declare global {
+  interface Navigator {
+    msSaveBlob?: (blob: any, defaultName?: string) => boolean;
+  }
+}
 
 export function ArtistPage() {
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
-  const [open, setOpen] = useState(false);
-  const { isLoading, data: artistData } = useGetArtistsQuery({
-    limit: limit,
-    page: page,
+  const {
+    handleOpenDialog,
+    handleAddArtist,
+    isLoading,
+    artistData,
+    openDialog,
+    pageIndex,
+    pageSize,
+    isCSVImport,
+    csvData,
+    setPagination,
+  } = useArtistPage();
+  const { handleExportCSV } = useCSVExport({
+    artistData: artistData ? artistData.data.artists : null,
   });
-
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
-
   return (
     <TableLayout
       title={"Artist Table"}
       description={"This table contains list of all the aritst"}
-      data={artistData ? artistData.data : []}
+      data={
+        isCSVImport
+          ? (csvData as ArtistData[])
+          : artistData
+            ? artistData.data.artists
+            : []
+      }
       columns={artistColumns}
       loading={isLoading}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      setPagination={setPagination}
+      pageCount={
+        artistData
+          ? Math.ceil(Number(artistData.data.totalRows) / pageSize)
+          : -1
+      }
     >
-      <DialogLayout open={open} setOpen={setOpen} buttonLabel="Add" icon={true}>
-        <AddEditArtistDialog
-          handleDialogClose={handleDialogClose}
-          isEdit={false}
-          editData={null}
-        />
-      </DialogLayout>
+      <div className="flex gap-x-4">
+        <ExportCSV handleExportCSV={handleExportCSV} />
+        <ImportCSV />
+        <DialogLayout
+          open={openDialog}
+          handleOpenChange={handleOpenDialog}
+          buttonLabel="Add"
+          icon={true}
+          handleAddClick={handleAddArtist}
+        >
+          <AddEditArtistDialog />
+        </DialogLayout>
+      </div>
     </TableLayout>
   );
 }

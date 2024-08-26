@@ -6,30 +6,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@web/components/ui/dialog";
-import { SongData } from "@web/types/types";
+import { useAppSelector } from "@web/redux/hooks";
 
-type IAddEditSong = {
-  isEdit: boolean;
-  editData: SongData | null;
-  handleDialogClose: () => void;
-};
-
-export function AddEditSongDialog({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: IAddEditSong) {
+export function AddEditSongDialog() {
+  const { isEdit } = useAppSelector((state) => state.songDialog);
   return (
     <DialogContent className="overflow-y-scroll max-h-screen">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold tracking-tight">{`${isEdit ? "Modify Song Information" : "New Song Entry"}`}</DialogTitle>
         <DialogDescription></DialogDescription>
       </DialogHeader>
-      <SongForm
-        isEdit={isEdit}
-        editData={editData}
-        handleDialogClose={handleDialogClose}
-      />
+      <SongForm />
     </DialogContent>
   );
 }

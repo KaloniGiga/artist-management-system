@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
 import DeleteDialog from "../../dialog/DeleteDialog";
-import { AddEditArtistDialog } from "../../dialog/AddEditArtistDialog";
 import { ArtistData } from "../../../types/types";
 import useDeleteArtist from "@web/hooks/useDeleteArtist";
 
@@ -10,35 +8,26 @@ interface IEditDeleteArtistOptions {
 }
 export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
   const {
-    open,
-    setOpen,
     isLoading,
-    isDeleteClicked,
-    setIsDeleteClicked,
-    handleDialogClose,
+    deleteDialog,
+    setDeleteDialog,
+    handleEditArtist,
+    handleDeleteArtist,
     handleConfirmDelete,
-  } = useDeleteArtist({ rowId: rowData?.id });
+  } = useDeleteArtist({ rowId: rowData?.id, rowData: rowData });
   return (
     <ActionDropdown
-      open={open}
-      setOpen={setOpen}
-      setIsDeleteClicked={setIsDeleteClicked}
+      open={deleteDialog}
+      handleDeleteDialog={setDeleteDialog}
+      handleEditClick={handleEditArtist}
+      handleDeleteClick={handleDeleteArtist}
     >
-      {!isDeleteClicked && (
-        <AddEditArtistDialog
-          handleDialogClose={handleDialogClose}
-          isEdit={true}
-          editData={rowData}
-        />
-      )}
-      {isDeleteClicked && (
-        <DeleteDialog
-          titleKey={"artist"}
-          handleCancelDelete={handleDialogClose}
-          handleConfirmDelete={handleConfirmDelete}
-          loading={isLoading}
-        />
-      )}
+      <DeleteDialog
+        titleKey={"artist"}
+        handleDeleteDialog={setDeleteDialog}
+        handleConfirmDelete={handleConfirmDelete}
+        loading={isLoading}
+      />
     </ActionDropdown>
   );
 }
