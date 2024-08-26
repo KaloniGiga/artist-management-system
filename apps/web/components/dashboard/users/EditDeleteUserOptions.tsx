@@ -1,30 +1,35 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
-import { useState } from "react";
-import DeleteDialog from "../dialogs/DeleteDialog";
+import DeleteDialog from "../../dialog/DeleteDialog";
 import { UserData } from "@web/types/types";
-import { AddEditUserDialog } from "../dialogs/AddEditUserDialog";
+import useDeleteUser from "@web/hooks/useDeleteUser";
 
 interface IEditDeleteUserOptions {
   rowData: UserData;
 }
 export function EditDeleteUserOptions({ rowData }: IEditDeleteUserOptions) {
-  const [open, setOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+  const {
+    isLoading,
+    deleteDialog,
+    setDeleteDialog,
+    handleEditUser,
+    handleDeleteUser,
+    handleConfirmDelete,
+  } = useDeleteUser({ rowId: rowData?.id, rowData: rowData });
+
   return (
     <ActionDropdown
-      open={open}
-      setOpen={setOpen}
-      setIsDeleteClicked={setIsDeleteClicked}
+      open={deleteDialog}
+      handleDeleteDialog={setDeleteDialog}
+      handleEditClick={handleEditUser}
+      handleDeleteClick={handleDeleteUser}
     >
-      {!isDeleteClicked && <AddEditUserDialog isEdit={false} editData={null} />}
-      {isDeleteClicked && (
-        <DeleteDialog
-          titleKey={"user"}
-          handleCancelDelete={() => console.log("well")}
-          handleConfirmDelete={() => console.log("well")}
-        />
-      )}
+      <DeleteDialog
+        titleKey={"user"}
+        handleDeleteDialog={setDeleteDialog}
+        handleConfirmDelete={handleConfirmDelete}
+        loading={isLoading}
+      />
     </ActionDropdown>
   );
 }

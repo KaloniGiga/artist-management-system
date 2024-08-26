@@ -1,30 +1,41 @@
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
-import { useState } from "react";
-import DeleteDialog from "../dialogs/DeleteDialog";
-import { SongData } from "@web/types/types";
-import { AddEditSongDialog } from "../dialogs/AddEditSongDialog";
+import DeleteDialog from "../../dialog/DeleteDialog";
+import { RoleEnum, SongData } from "@web/types/types";
+import useDeleteSong from "@web/hooks/useDeleteSong";
+import { useAppSelector } from "@web/redux/hooks";
 
 interface IEditDeleteSongOptions {
   rowData: SongData;
 }
 export function EditDeleteSongOptions({ rowData }: IEditDeleteSongOptions) {
-  const [open, setOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-  console.log(rowData);
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  const {
+    isLoading,
+    deleteDialog,
+    setDeleteDialog,
+    handleEditSong,
+    handleDeleteSong,
+    handleConfirmDelete,
+  } = useDeleteSong({ rowId: rowData?.id, rowData: rowData });
+
   return (
-    <ActionDropdown
-      open={open}
-      setOpen={setOpen}
-      setIsDeleteClicked={setIsDeleteClicked}
-    >
-      {!isDeleteClicked && <AddEditSongDialog isEdit={false} editData={null} />}
-      {isDeleteClicked && (
-        <DeleteDialog
-          titleKey={"song"}
-          handleCancelDelete={() => console.log("well")}
-          handleConfirmDelete={() => console.log("well")}
-        />
+    <>
+      {userInfo && userInfo.role_type !== RoleEnum.ARTISTMANAGER && (
+        <ActionDropdown
+          open={deleteDialog}
+          handleDeleteDialog={setDeleteDialog}
+          handleEditClick={handleEditSong}
+          handleDeleteClick={handleDeleteSong}
+        >
+          <DeleteDialog
+            loading={isLoading}
+            titleKey={"song"}
+            handleDeleteDialog={setDeleteDialog}
+            handleConfirmDelete={handleConfirmDelete}
+          />
+        </ActionDropdown>
       )}
-    </ActionDropdown>
+    </>
   );
 }

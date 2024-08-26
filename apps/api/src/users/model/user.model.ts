@@ -14,7 +14,9 @@ class UserModel {
   gender: GenderEnum;
   role: RoleEnum;
   @Expose({ name: "address" })
-  Address: string;
+  address: string;
+  @Expose({ name: "artist_id" })
+  artistId: number | null;
 }
 
 export default UserModel;

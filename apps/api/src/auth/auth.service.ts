@@ -1,16 +1,13 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import UsersService from "@server/users/users.service";
 import RegisterUserDto from "./dto/register-user.dto";
-import * as bcrypt from "bcrypt";
 import { TokenPayload } from "./types/types";
 import { RoleEnum } from "@server/users/types/types";
+import { compareHashAndText, hashAText } from "@server/common/utils/utils";
+import { plainToInstance } from "class-transformer";
+import UserModel from "@server/users/model/user.model";
 
 @Injectable()
 export class AuthenticationService {
@@ -29,7 +26,7 @@ export class AuthenticationService {
         throw new HttpException("Email already used.", HttpStatus.CONFLICT);
       }
 
-      if (registrationData.role !== RoleEnum.SUPERADMIN) {
+      if (registrationData.role_type !== RoleEnum.SUPERADMIN) {
         throw new HttpException(
           "Only super admin can register.",
           HttpStatus.BAD_REQUEST,
@@ -43,10 +40,7 @@ export class AuthenticationService {
       });
       return createdUser;
     } catch (error) {
-      throw new HttpException(
-        "Something went wrong",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -54,11 +48,15 @@ export class AuthenticationService {
     try {
       const user = await this.usersService.getUserByEmail(email);
       if (!user) {
-        throw new NotFoundException();
+        throw new HttpException(
+          "Wrong credentials provided",
+          HttpStatus.BAD_REQUEST,
+        );
       }
       await this.verifyPassword(plainTextPassword, user.password);
-      user.password = undefined;
-      return user;
+
+      console.log(user, plainTextPassword);
+      return plainToInstance(UserModel, user);
     } catch (error) {
       throw new HttpException(
         "Wrong credentials provided",
@@ -71,10 +69,11 @@ export class AuthenticationService {
     plainTextPassword: string,
     hashedPassword: string,
   ) {
-    const isPasswordMatching = await bcrypt.compare(
+    const isPasswordMatching = await compareHashAndText(
       plainTextPassword,
       hashedPassword,
     );
+    console.log(isPasswordMatching);
     if (!isPasswordMatching) {
       throw new HttpException(
         "Wrong credentials provided",
@@ -89,14 +88,14 @@ export class AuthenticationService {
       secret: this.configService.get("JWT_ACCESS_TOKEN_SECRET"),
       expiresIn: `${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`,
     });
-    return `accessToken=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}`;
+    return `accessToken=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`;
   }
 
   public getCookiesForLogOut() {
-    return ["accessToken=; HttpOnly; Path=/; Max-Age=0"];
+    return ["accessToken=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"];
   }
 
-  public async hashPassword(plainTextPassword: string) {
-    return await bcrypt.hash(plainTextPassword, 10);
+  private async hashPassword(plainTextPassword: string) {
+    return await hashAText(plainTextPassword);
   }
 }

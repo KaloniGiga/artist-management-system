@@ -1,4 +1,5 @@
 "use client";
+import { Dispatch, SetStateAction } from "react";
 import {
   Card,
   CardContent,
@@ -8,6 +9,8 @@ import {
 } from "../../ui/card";
 import { DataTable } from "./DataTable";
 import { ColumnDef } from "@tanstack/react-table";
+import useDataTables from "@web/hooks/useDataTable";
+import { Loader2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -18,7 +21,13 @@ interface ITableMetaData {
   title: string;
   description: string;
   children: React.ReactNode;
-  onClickAdd: () => void;
+  loading: boolean;
+  pageIndex: number;
+  pageSize: number;
+  pageCount: number;
+  setPagination: Dispatch<
+    SetStateAction<{ pageIndex: number; pageSize: number }>
+  >;
 }
 
 type TableLayoutProps<TData, TValue> = DataTableProps<TData, TValue> &
@@ -29,11 +38,24 @@ export function TableLayout<TData, TValue>({
   children,
   columns,
   data,
+  loading,
+  pageCount,
+  pageIndex,
+  pageSize,
+  setPagination,
 }: TableLayoutProps<TData, TValue>) {
+  const { table } = useDataTables({
+    data,
+    columns,
+    pageCount,
+    pageIndex,
+    pageSize,
+    setPagination,
+  });
   return (
     <div className="w-full">
       <Card className="w-full">
-        <CardHeader className="flex flex-row items-center">
+        <CardHeader className="flex flex-row justify-between items-center">
           <div className="grid gap-2">
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
@@ -41,7 +63,13 @@ export function TableLayout<TData, TValue>({
           {children}
         </CardHeader>
         <CardContent>
-          <DataTable data={data} columns={columns} />
+          {loading ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Loader2 className="h-6 w-6 animate-spin" />
+            </div>
+          ) : (
+            <DataTable columnsLength={columns.length} table={table} />
+          )}
         </CardContent>
       </Card>
     </div>

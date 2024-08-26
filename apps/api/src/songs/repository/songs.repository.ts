@@ -12,12 +12,21 @@ class SongsRepository {
   async getSongsByArtistId(artistId: number, page: number, limit: number) {
     const databaseRespoonse = await this.databaseService.runQuery(
       `
-         SELECT * FROM songs WHERE artist_id=$1 LIMIT $2 OFFSET $3
+         SELECT * FROM songs WHERE artist_id=$1 ORDER BY created_at ASC LIMIT $2 OFFSET $3
       `,
       [artistId, limit, page * limit],
     );
 
     return plainToInstance(SongModel, databaseRespoonse.rows);
+  }
+
+  async getTotalRows(artistId: number) {
+    const databaseResponse = await this.databaseService.runQuery(
+      `
+      SELECT COUNT(*) as totalRowsCount FROM songs WHERE artist_id=$1`,
+      [artistId],
+    );
+    return databaseResponse.rows[0].totalrowscount;
   }
 
   async getSongById(id: number) {
@@ -26,9 +35,6 @@ class SongsRepository {
       [id],
     );
     const entity = databaseResponse.rows[0];
-    if (!entity) {
-      throw new NotFoundException();
-    }
     return plainToInstance(SongModel, entity);
   }
 

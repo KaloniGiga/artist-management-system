@@ -11,11 +11,17 @@ class ArtistRepository {
 
   async getAllArtists(page: number, limit: number) {
     const databaseResponse = await this.databaseService.runQuery(
-      `SELECT * FROM artists LIMIT $1 OFFSET $2`,
+      `SELECT * FROM artists ORDER BY created_at ASC LIMIT $1 OFFSET $2`,
       [limit, limit * page],
     );
 
     return plainToInstance(ArtistModel, databaseResponse.rows);
+  }
+
+  async getTotalRows() {
+    const databaseResponse = await this.databaseService.runQuery(`
+      SELECT COUNT(*) as totalRowsCount FROM artists`);
+    return databaseResponse.rows[0].totalrowscount;
   }
 
   async getArtistsById(id: number) {
@@ -27,6 +33,15 @@ class ArtistRepository {
     if (!entity) {
       throw new NotFoundException();
     }
+    return plainToInstance(ArtistModel, entity);
+  }
+
+  async getArtistByName(name: string) {
+    const databaseResponse = await this.databaseService.runQuery(
+      `SELECT name FROM artists WHERE name=$1`,
+      [name],
+    );
+    const entity = databaseResponse.rows[0];
     return plainToInstance(ArtistModel, entity);
   }
 
