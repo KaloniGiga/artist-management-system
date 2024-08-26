@@ -10,35 +10,28 @@ interface IEditDeleteArtistOptions {
 }
 export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
   const {
-    open,
-    setOpen,
+    openDialog,
     isLoading,
-    isDeleteClicked,
-    setIsDeleteClicked,
-    handleDialogClose,
+    deleteDialog,
+    setDeleteDialog,
+    handleEditDialog,
+    handleEditArtist,
+    handleDeleteArtist,
     handleConfirmDelete,
-  } = useDeleteArtist({ rowId: rowData?.id });
+  } = useDeleteArtist({ rowId: rowData?.id, rowData: rowData });
   return (
     <ActionDropdown
-      open={open}
-      setOpen={setOpen}
-      setIsDeleteClicked={setIsDeleteClicked}
+      open={deleteDialog}
+      handleDeleteDialog={setDeleteDialog}
+      handleEditClick={handleEditArtist}
+      handleDeleteClick={handleDeleteArtist}
     >
-      {!isDeleteClicked && (
-        <AddEditArtistDialog
-          handleDialogClose={handleDialogClose}
-          isEdit={true}
-          editData={rowData}
-        />
-      )}
-      {isDeleteClicked && (
-        <DeleteDialog
-          titleKey={"artist"}
-          handleCancelDelete={handleDialogClose}
-          handleConfirmDelete={handleConfirmDelete}
-          loading={isLoading}
-        />
-      )}
+      <DeleteDialog
+        titleKey={"artist"}
+        handleDeleteDialog={setDeleteDialog}
+        handleConfirmDelete={handleConfirmDelete}
+        loading={isLoading}
+      />
     </ActionDropdown>
   );
 }

@@ -1,24 +1,47 @@
 "use client";
 import { extractMessageFromError } from "@web/lib/utils";
 import { useDeleteArtistMutation } from "@web/redux/artist/artist.api";
+import {
+  setArtistDialogOpen,
+  setArtistEditData,
+  setArtistIsEdit,
+} from "@web/redux/dialog/artist-dialog.slice";
+import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
+import { ArtistData } from "@web/types/types";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface IDeleteArtist {
   rowId: number;
+  rowData: ArtistData;
 }
-export default function useDeleteArtist({ rowId }: IDeleteArtist) {
-  const [open, setOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+export default function useDeleteArtist({ rowId, rowData }: IDeleteArtist) {
+  const dispatch = useAppDispatch();
+  const { openDialog } = useAppSelector((state) => state.artistDialog);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   const [deleteArtist, { isLoading }] = useDeleteArtistMutation();
+
+  const handleEditDialog = (open: boolean) => {
+    dispatch(setArtistDialogOpen(open));
+  };
+
+  const handleEditArtist = () => {
+    handleEditDialog(true);
+    dispatch(setArtistEditData(rowData));
+    dispatch(setArtistIsEdit(true));
+  };
+
+  const handleDeleteArtist = () => {
+    setDeleteDialog(true);
+  };
 
   const handleConfirmDelete = () => {
     if (rowId) {
       deleteArtist(rowId)
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          setDeleteDialog(false);
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);
@@ -27,17 +50,14 @@ export default function useDeleteArtist({ rowId }: IDeleteArtist) {
     }
   };
 
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
-
   return {
-    open,
-    setOpen,
-    isDeleteClicked,
-    setIsDeleteClicked,
+    openDialog,
+    handleEditDialog,
+    deleteDialog,
+    setDeleteDialog,
     isLoading,
     handleConfirmDelete,
-    handleDialogClose,
+    handleEditArtist,
+    handleDeleteArtist,
   };
 }

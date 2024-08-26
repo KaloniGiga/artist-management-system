@@ -13,19 +13,21 @@ import React, { Dispatch, SetStateAction } from "react";
 
 interface IActionDropdown {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  setIsDeleteClicked: Dispatch<SetStateAction<boolean>>;
+  handleDeleteDialog: Dispatch<SetStateAction<boolean>>;
+  handleEditClick: () => void;
+  handleDeleteClick: () => void;
   children: React.ReactNode;
 }
 
 export function ActionDropdown({
   open,
-  setOpen,
-  setIsDeleteClicked,
+  handleDeleteDialog,
+  handleEditClick,
+  handleDeleteClick,
   children,
 }: IActionDropdown) {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleDeleteDialog}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -34,20 +36,8 @@ export function ActionDropdown({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => {
-              setIsDeleteClicked(false);
-              setOpen(true);
-            }}
-          >
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setIsDeleteClicked(true);
-              setOpen(true);
-            }}
-          >
+          <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDeleteClick}>
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

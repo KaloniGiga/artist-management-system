@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 interface IDialogLayout {
   open: boolean;
   handleOpenChange: (value: boolean) => void;
+  handleAddClick: () => void;
   buttonLabel: string;
   icon: boolean;
   children: ReactNode;
@@ -13,6 +14,7 @@ interface IDialogLayout {
 export default function DialogLayout({
   open,
   handleOpenChange,
+  handleAddClick,
   buttonLabel,
   children,
   icon,
@@ -20,7 +22,7 @@ export default function DialogLayout({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="sm" className="ml-auto gap-1">
+        <Button onClick={handleAddClick} size="sm" className="ml-auto gap-1">
           {buttonLabel}
           {icon && <PlusCircle className="h-4 w-4" />}
         </Button>

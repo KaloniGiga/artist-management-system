@@ -40,7 +40,7 @@ export default function useAddEditArtist() {
       form.setValue("name", editData.name);
       form.setValue("dob", editData.dob);
       form.setValue("gender", editData.gender);
-      form.setValue("dob", editData.dob);
+      form.setValue("dob", new Date(editData.dob));
       form.setValue("first_release_year", editData.first_release_year);
       form.setValue("no_of_albums_released", editData.no_of_albums_released);
       form.setValue("address", editData.address);

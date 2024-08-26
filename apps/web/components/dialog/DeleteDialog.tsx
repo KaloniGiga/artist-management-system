@@ -6,17 +6,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@web/components/ui/dialog";
+import { Dispatch, SetStateAction } from "react";
 
 interface IDeleteDialog {
   titleKey: string;
   handleConfirmDelete: () => void;
-  handleCancelDelete: () => void;
+  handleDeleteDialog: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
 }
 
 export function DeleteDialog({
   handleConfirmDelete,
-  handleCancelDelete,
+  handleDeleteDialog,
   titleKey,
   loading,
 }: IDeleteDialog) {
@@ -31,7 +32,7 @@ export function DeleteDialog({
       <div className="flex justify-end gap-4">
         <Button
           disabled={loading}
-          onClick={handleCancelDelete}
+          onClick={() => handleDeleteDialog(false)}
           variant={"outline"}
         >
           Cancel

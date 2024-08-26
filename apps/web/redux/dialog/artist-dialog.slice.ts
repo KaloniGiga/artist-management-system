@@ -7,12 +7,13 @@ const artistDialogSlice = createDialogSlice({
     openDialog: false,
     isEdit: false,
     editData: null,
-  } as DialogState<ArtistData>,
+  } as DialogState<ArtistData | null>,
   reducers: {},
 });
 
 export const {
   setOpenDialog: setArtistDialogOpen,
   setEditData: setArtistEditData,
+  setIsEdit: setArtistIsEdit,
 } = artistDialogSlice.actions;
 export default artistDialogSlice.reducer;

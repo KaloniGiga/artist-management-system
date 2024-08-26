@@ -24,6 +24,7 @@ declare global {
 export function ArtistPage() {
   const {
     handleOpenDialog,
+    handleAddArtist,
     isLoading,
     artistData,
     openDialog,
@@ -66,6 +67,7 @@ export function ArtistPage() {
           handleOpenChange={handleOpenDialog}
           buttonLabel="Add"
           icon={true}
+          handleAddClick={handleAddArtist}
         >
           <AddEditArtistDialog />
         </DialogLayout>

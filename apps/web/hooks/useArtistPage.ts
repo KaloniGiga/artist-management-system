@@ -1,5 +1,9 @@
 import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
-import { setArtistDialogOpen } from "@web/redux/dialog/artist-dialog.slice";
+import {
+  setArtistDialogOpen,
+  setArtistEditData,
+  setArtistIsEdit,
+} from "@web/redux/dialog/artist-dialog.slice";
 import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
 import { useState } from "react";
 
@@ -20,6 +24,12 @@ export default function useArtistPage() {
     dispatch(setArtistDialogOpen(open));
   };
 
+  const handleAddArtist = () => {
+    handleOpenDialog(true);
+    dispatch(setArtistIsEdit(false));
+    dispatch(setArtistEditData(null));
+  };
+
   return {
     isLoading,
     artistData,
@@ -30,5 +40,6 @@ export default function useArtistPage() {
     csvData,
     isCSVImport,
     setPagination,
+    handleAddArtist,
   };
 }
