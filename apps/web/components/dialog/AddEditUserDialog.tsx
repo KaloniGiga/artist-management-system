@@ -5,30 +5,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@web/components/ui/dialog";
-import { UserData } from "@web/types/types";
+import { useAppSelector } from "@web/redux/hooks";
 
-type IAddEditUser = {
-  isEdit: boolean;
-  editData: UserData | null;
-  handleDialogClose: () => void;
-};
-
-export function AddEditUserDialog({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: IAddEditUser) {
+export function AddEditUserDialog() {
+  const { isEdit } = useAppSelector((state) => state.userDialog);
   return (
     <DialogContent className="overflow-y-scroll max-h-screen">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold tracking-tight">{`${isEdit ? "Modify User Information" : "New User Entry"}`}</DialogTitle>
       </DialogHeader>
 
-      <UserForm
-        isEdit={isEdit}
-        editData={editData}
-        handleDialogClose={handleDialogClose}
-      />
+      <UserForm />
     </DialogContent>
   );
 }

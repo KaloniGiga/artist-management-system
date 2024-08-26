@@ -6,21 +6,20 @@ import { AddEditUserDialog } from "../../dialog/AddEditUserDialog";
 import { useGetUsersQuery } from "@web/redux/user/user.api";
 import { useState } from "react";
 import DialogLayout from "../../dialog/DialogLayout";
+import useUserPage from "@web/hooks/useUserPage";
 
 export function UserPage() {
-  const [{ pageIndex, pageSize }, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [open, setOpen] = useState(false);
-  const { isLoading, data: userData } = useGetUsersQuery({
-    page: pageIndex,
-    limit: pageSize,
-  });
+  const {
+    handleOpenDialog,
+    handleAddUser,
+    isLoading,
+    userData,
+    openDialog,
+    pageIndex,
+    pageSize,
+    setPagination,
+  } = useUserPage();
 
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
   return (
     <TableLayout
       title={"List of Users"}
@@ -37,12 +36,14 @@ export function UserPage() {
         userData ? Math.ceil(Number(userData.data.totalRows) / pageSize) : -1
       }
     >
-      <DialogLayout open={open} setOpen={setOpen} buttonLabel="Add" icon={true}>
-        <AddEditUserDialog
-          handleDialogClose={handleDialogClose}
-          isEdit={false}
-          editData={null}
-        />
+      <DialogLayout
+        open={openDialog}
+        buttonLabel="Add"
+        icon={true}
+        handleAddClick={handleAddUser}
+        handleOpenChange={handleOpenDialog}
+      >
+        <AddEditUserDialog />
       </DialogLayout>
     </TableLayout>
   );

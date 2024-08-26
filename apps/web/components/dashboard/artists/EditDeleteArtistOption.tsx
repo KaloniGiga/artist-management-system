@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ActionDropdown } from "@web/components/core/data-table/ActionDropdown";
 import DeleteDialog from "../../dialog/DeleteDialog";
-import { AddEditArtistDialog } from "../../dialog/AddEditArtistDialog";
 import { ArtistData } from "../../../types/types";
 import useDeleteArtist from "@web/hooks/useDeleteArtist";
 
@@ -10,11 +8,9 @@ interface IEditDeleteArtistOptions {
 }
 export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
   const {
-    openDialog,
     isLoading,
     deleteDialog,
     setDeleteDialog,
-    handleEditDialog,
     handleEditArtist,
     handleDeleteArtist,
     handleConfirmDelete,

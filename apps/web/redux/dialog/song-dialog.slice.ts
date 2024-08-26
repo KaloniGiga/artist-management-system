@@ -7,12 +7,13 @@ const songDialogSlice = createDialogSlice({
     openDialog: false,
     isEdit: false,
     editData: null,
-  } as DialogState<SongData[]>,
+  } as DialogState<SongData | null>,
   reducers: {},
 });
 
 export const {
   setOpenDialog: setSongDialogOpen,
   setEditData: setSongEditData,
+  setIsEdit: setSongIsEdit,
 } = songDialogSlice.actions;
 export default songDialogSlice.reducer;

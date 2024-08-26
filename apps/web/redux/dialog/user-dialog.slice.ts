@@ -7,12 +7,13 @@ const userDialogSlice = createDialogSlice({
     openDialog: false,
     isEdit: false,
     editData: null,
-  } as DialogState<UserData[]>,
+  } as DialogState<UserData | null>,
   reducers: {},
 });
 
 export const {
   setOpenDialog: setUserDialogOpen,
   setEditData: setUserEditData,
+  setIsEdit: setUserIsEdit,
 } = userDialogSlice.actions;
 export default userDialogSlice.reducer;

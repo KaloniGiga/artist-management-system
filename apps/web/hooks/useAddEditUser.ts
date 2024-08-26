@@ -2,22 +2,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { extractMessageFromError } from "@web/lib/utils";
 import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
+import { setUserDialogOpen } from "@web/redux/dialog/user-dialog.slice";
+import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
 import {
   usePostUserMutation,
   usePutUserMutation,
 } from "@web/redux/user/user.api";
-import { GenderEnum, RoleEnum, UserData } from "@web/types/types";
+import { GenderEnum, RoleEnum } from "@web/types/types";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import validator from "validator";
 import { z } from "zod";
-
-interface Props {
-  isEdit: boolean;
-  editData: UserData | null;
-  handleDialogClose: () => void;
-}
 
 const formSchema = z
   .object({
@@ -48,12 +44,10 @@ const formSchema = z
     path: ["artistId"],
   });
 
-export default function useAddEditUser({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: Props) {
+export default function useAddEditUser() {
   // todo: make the artist query able to fetch all the data without pagination
+  const dispatch = useAppDispatch();
+  const { isEdit, editData } = useAppSelector((state) => state.userDialog);
   const { data: artistsData } = useGetArtistsQuery({ page: 0, limit: 10 });
   const [postUser, { isLoading: postLoading }] = usePostUserMutation();
   const [putUser, { isLoading: putLoading }] = usePutUserMutation();
@@ -65,7 +59,6 @@ export default function useAddEditUser({
   const watchRole = form.watch("role_type");
 
   useEffect(() => {
-    console.log(editData);
     form.reset();
     if (isEdit && editData) {
       form.setValue("first_name", editData.first_name);
@@ -86,7 +79,7 @@ export default function useAddEditUser({
       putUser({ id: editData.id, userDetails: values })
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          dispatch(setUserDialogOpen(false));
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);
@@ -96,7 +89,7 @@ export default function useAddEditUser({
       postUser(values)
         .unwrap()
         .then(() => {
-          handleDialogClose();
+          dispatch(setUserDialogOpen(false));
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);
