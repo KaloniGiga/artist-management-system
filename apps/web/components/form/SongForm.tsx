@@ -25,7 +25,7 @@ export default function SongForm({
       loading={postLoading || putLoading}
       form={form}
       onSubmit={onSubmit}
-      buttonLabel="Sign up"
+      buttonLabel="Submit"
     >
       <InputUI
         control={form.control}

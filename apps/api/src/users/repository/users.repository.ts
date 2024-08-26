@@ -33,6 +33,7 @@ class UsersRepository {
       `SELECT * FROM users WHERE email=$1`,
       [email],
     );
+
     return databaseResponse.rows[0];
   }
 

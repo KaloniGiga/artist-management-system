@@ -43,7 +43,7 @@ class SongsService {
       // check if artistId is valid.
       const targetArtist = await this.artistService.getArtistById(artistId);
       if (!targetArtist) {
-        throw new NotFoundException();
+        throw new NotFoundException("Invalid Artist");
       }
       // check if the tilte is uniques\
       return await this.songsRepository.create(songData, artistId);
@@ -62,7 +62,7 @@ class SongsService {
         songData.artistId,
       );
       if (!targetArtist) {
-        throw new NotFoundException();
+        throw new NotFoundException("Invalid Artist");
       }
 
       // check if title is unique.

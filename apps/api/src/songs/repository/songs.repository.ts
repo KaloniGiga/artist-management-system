@@ -26,9 +26,6 @@ class SongsRepository {
       [id],
     );
     const entity = databaseResponse.rows[0];
-    if (!entity) {
-      throw new NotFoundException();
-    }
     return plainToInstance(SongModel, entity);
   }
 

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useAppSelector } from "@web/redux/hooks";
-import useVerify from "@web/hooks/useVerify";
 import { forwardRoute } from "@web/lib/access-routes";
 
 export default function CheckAuthProvider({
@@ -13,27 +12,29 @@ export default function CheckAuthProvider({
   children: ReactNode;
 }) {
   const router = useRouter();
-  const { isLoading, error, isFetching, data: userData } = useVerify();
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const { isLoading, isAuthenticated, userInfo } = useAppSelector(
+    (state) => state.auth,
+  );
 
   useEffect(() => {
     /**
      * @function: If user is authenticated, forward the user to specific route based on the role
      * executes only if the user is logged in and user data is feteched successfully.
      */
-    if (isAuthenticated && !isFetching && !isLoading && userData) {
+    if (isAuthenticated && !isLoading && userInfo) {
       // find out which route the user with given role is forwarded.
-      const forwardToRouteOrFunction = forwardRoute[userData.data.role_type];
+      const forwardToRouteOrFunction = forwardRoute[userInfo.role_type];
       // if user role is artist, a function is returned, which returns a constructed route with artistId
       const targetRoute =
         typeof forwardToRouteOrFunction == "string"
           ? forwardToRouteOrFunction
           : forwardToRouteOrFunction(
-              userData.data.artistId ? userData.data.artistId : null,
+              userInfo?.artistId ? userInfo.artistId : null,
             );
+      console.log("routing to target");
       router.push(targetRoute);
     }
-  }, [isAuthenticated, isFetching, isLoading, userData]);
+  }, [isAuthenticated, isLoading, userInfo]);
 
   // if user is loading, show loading screen
   if (isLoading) {
@@ -45,7 +46,7 @@ export default function CheckAuthProvider({
   }
 
   // if user token has expired or user is not authenticated, fetching user detail return error, therefore show login page.
-  if (error) {
+  if (!isAuthenticated && !isLoading) {
     return children;
   }
 }

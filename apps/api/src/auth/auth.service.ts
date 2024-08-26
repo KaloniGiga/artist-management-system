@@ -6,6 +6,8 @@ import RegisterUserDto from "./dto/register-user.dto";
 import { TokenPayload } from "./types/types";
 import { RoleEnum } from "@server/users/types/types";
 import { compareHashAndText, hashAText } from "@server/common/utils/utils";
+import { plainToInstance } from "class-transformer";
+import UserModel from "@server/users/model/user.model";
 
 @Injectable()
 export class AuthenticationService {
@@ -53,8 +55,7 @@ export class AuthenticationService {
       }
       await this.verifyPassword(plainTextPassword, user.password);
 
-      user.password = undefined;
-      return user;
+      return plainToInstance(UserModel, user);
     } catch (error) {
       throw new HttpException(
         "Wrong credentials provided",

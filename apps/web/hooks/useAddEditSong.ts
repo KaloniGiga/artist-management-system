@@ -6,6 +6,7 @@ import {
   usePutSongMutation,
 } from "@web/redux/song/song.api";
 import { GenreEnum, SongData } from "@web/types/types";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -34,6 +35,8 @@ export default function useAddEditSong({
   editData,
   handleDialogClose,
 }: Props) {
+  const params = useParams();
+  const artistId = Number(params.artistId);
   const [postSong, { isLoading: postLoading }] = usePostSongMutation();
   const [putSong, { isLoading: putLoading }] = usePutSongMutation();
 
@@ -52,7 +55,10 @@ export default function useAddEditSong({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (isEdit && editData) {
-      putSong({ id: editData.id, songDetails: values })
+      putSong({
+        id: editData.id,
+        songDetails: { ...values, artistId: editData.artistId },
+      })
         .unwrap()
         .then(() => {
           handleDialogClose();
@@ -62,7 +68,12 @@ export default function useAddEditSong({
           toast.error(errMsg ? errMsg : "Failed to update song.");
         });
     } else {
-      postSong(values)
+      // check if artistId is valid number.
+      if (!artistId || isNaN(artistId)) {
+        toast.error("Artist is invalid.");
+        return;
+      }
+      postSong({ ...values, artistId: artistId })
         .unwrap()
         .then(() => {
           handleDialogClose();

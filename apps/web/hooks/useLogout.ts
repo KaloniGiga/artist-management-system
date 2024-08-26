@@ -17,8 +17,6 @@ export default function useLogout() {
         router.replace("/");
       })
       .catch(() => {
-        dispatch(setLogout());
-        // router.replace("/");
         toast.error("Failed to logout");
       });
   };

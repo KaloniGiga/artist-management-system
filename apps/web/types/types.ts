@@ -33,11 +33,12 @@ export interface Song {
   title: string;
   album_name: string;
   genre: GenreEnum;
-  authorId?: number;
+  artistId?: number;
 }
 
 export interface SongData extends Song {
   id: number;
+  artistId: number;
 }
 
 export interface LoginData {
