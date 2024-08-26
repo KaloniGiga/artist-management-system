@@ -225,6 +225,9 @@ importers:
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.4.1
       react:
         specifier: ^18
         version: 18.3.1
@@ -262,6 +265,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.14.15
+      '@types/papaparse':
+        specifier: ^5.3.14
+        version: 5.3.14
       '@types/react':
         specifier: ^18
         version: 18.3.3
@@ -1421,6 +1427,9 @@ packages:
 
   '@types/node@20.14.15':
     resolution: {integrity: sha512-Fz1xDMCF/B00/tYSVMlmK7hVeLh7jE5f3B7X1/hmV0MJBwE27KlS7EvD/Yp+z1lm8mVhwV5w+n8jOZG8AfTlKw==}
+
+  '@types/papaparse@5.3.14':
+    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
 
   '@types/passport-jwt@4.0.1':
     resolution: {integrity: sha512-Y0Ykz6nWP4jpxgEUYq8NoVZeCQPo1ZndJLfapI249g1jHChvRfZRO/LS3tqu26YgAS/laI1qx98sYGz0IalRXQ==}
@@ -3886,6 +3895,9 @@ packages:
 
   package-json-from-dist@1.0.0:
     resolution: {integrity: sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==}
+
+  papaparse@5.4.1:
+    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -6399,6 +6411,10 @@ snapshots:
   '@types/node@20.14.15':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/papaparse@5.3.14':
+    dependencies:
+      '@types/node': 20.14.15
 
   '@types/passport-jwt@4.0.1':
     dependencies:
@@ -9344,6 +9360,8 @@ snapshots:
   p-try@2.2.0: {}
 
   package-json-from-dist@1.0.0: {}
+
+  papaparse@5.4.1: {}
 
   parent-module@1.0.1:
     dependencies:

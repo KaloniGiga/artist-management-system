@@ -44,7 +44,6 @@ export function TableLayout<TData, TValue>({
   pageSize,
   setPagination,
 }: TableLayoutProps<TData, TValue>) {
-  console.log(pageCount);
   const { table } = useDataTables({
     data,
     columns,
@@ -53,11 +52,10 @@ export function TableLayout<TData, TValue>({
     pageSize,
     setPagination,
   });
-  console.log(table.getPageCount());
   return (
     <div className="w-full">
       <Card className="w-full">
-        <CardHeader className="flex flex-row items-center">
+        <CardHeader className="flex flex-row justify-between items-center">
           <div className="grid gap-2">
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>

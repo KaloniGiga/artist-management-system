@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { TableLayout } from "@web/components/core/data-table/TableLayout";
-import { GenreEnum, RoleEnum } from "@web/types/types";
+import { RoleEnum } from "@web/types/types";
 import { songColumns } from "./SongColumns";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { Button } from "@web/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
 import { useGetSongsQuery } from "@web/redux/song/song.api";
 import { useState } from "react";
-import { useGetUserQuery } from "@web/redux/auth/auth.api";
 import { useAppSelector } from "@web/redux/hooks";
 
 export function SongPage() {
