@@ -4,28 +4,18 @@ import InputUI from "../core/input/InputUI";
 import SelectUI from "../core/select/SelectUI";
 import { DatePicker } from "../core/date-picker/DatePicker";
 import useAddEditArtist from "@web/hooks/useAddEditArtist";
-import { ArtistData } from "@web/types/types";
 import { selectGenderList } from "@web/lib/constant";
 
-interface IArtistForm {
-  isEdit: boolean;
-  editData: ArtistData | null;
-  handleDialogClose: () => void;
-}
-export default function ArtistForm({
-  isEdit,
-  editData,
-  handleDialogClose,
-}: IArtistForm) {
+export default function ArtistForm() {
   const { formSchema, postLoading, putLoading, onSubmit, form } =
-    useAddEditArtist({ isEdit, editData, handleDialogClose });
+    useAddEditArtist();
 
   return (
     <FormLayout<typeof formSchema>
       loading={postLoading || putLoading}
       form={form}
       onSubmit={onSubmit}
-      buttonLabel="Sign up"
+      buttonLabel="Submit"
     >
       <InputUI
         control={form.control}
@@ -46,7 +36,7 @@ export default function ArtistForm({
         control={form.control}
         name="gender"
         label={"Enter Gender"}
-        placeholder="Male"
+        placeholder=""
         disabled={postLoading || putLoading}
         selectItem={selectGenderList}
       />

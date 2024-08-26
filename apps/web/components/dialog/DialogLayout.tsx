@@ -1,24 +1,24 @@
 import { Button } from "@web/components/ui/button";
 import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { ReactNode } from "react";
 
 interface IDialogLayout {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  handleOpenChange: (value: boolean) => void;
   buttonLabel: string;
   icon: boolean;
   children: ReactNode;
 }
 export default function DialogLayout({
   open,
-  setOpen,
+  handleOpenChange,
   buttonLabel,
   children,
   icon,
 }: IDialogLayout) {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button size="sm" className="ml-auto gap-1">
           {buttonLabel}
