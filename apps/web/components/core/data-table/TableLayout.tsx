@@ -1,4 +1,5 @@
 "use client";
+import { Dispatch, SetStateAction } from "react";
 // import { Loader2 } from "lucide-react";
 import {
   Card,
@@ -21,9 +22,12 @@ interface ITableMetaData {
   description: string;
   children: React.ReactNode;
   loading: boolean;
-  page: number;
-  limit: number;
+  pageIndex: number;
+  pageSize: number;
   pageCount: number;
+  setPagination: Dispatch<
+    SetStateAction<{ pageIndex: number; pageSize: number }>
+  >;
 }
 
 type TableLayoutProps<TData, TValue> = DataTableProps<TData, TValue> &
@@ -36,10 +40,20 @@ export function TableLayout<TData, TValue>({
   data,
   // loading,
   pageCount,
-  page,
-  limit,
+  pageIndex,
+  pageSize,
+  setPagination,
 }: TableLayoutProps<TData, TValue>) {
-  const { table } = useDataTables({ data, columns, pageCount, page, limit });
+  console.log(pageCount);
+  const { table } = useDataTables({
+    data,
+    columns,
+    pageCount,
+    pageIndex,
+    pageSize,
+    setPagination,
+  });
+  console.log(table.getPageCount());
   return (
     <div className="w-full">
       <Card className="w-full">

@@ -4,29 +4,23 @@ import { TableLayout } from "@web/components/core/data-table/TableLayout";
 import { userColumns } from "./UserColumns";
 import { AddEditUserDialog } from "../../dialog/AddEditUserDialog";
 import { useGetUsersQuery } from "@web/redux/user/user.api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DialogLayout from "../../dialog/DialogLayout";
 
 export function UserPage() {
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
-  const [pageCount, setPageCount] = useState(0);
+  const [{ pageIndex, pageSize }, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [open, setOpen] = useState(false);
   const { isLoading, data: userData } = useGetUsersQuery({
-    page: page,
-    limit: limit,
+    page: pageIndex,
+    limit: pageSize,
   });
-
-  useEffect(() => {
-    if (userData) {
-      setPageCount(Number(userData.data.totalRows));
-    }
-  }, [userData]);
 
   const handleDialogClose = () => {
     setOpen(false);
   };
-
   return (
     <TableLayout
       title={"List of Users"}
@@ -36,9 +30,12 @@ export function UserPage() {
       data={userData ? userData.data.users : []}
       columns={userColumns}
       loading={isLoading}
-      page={page}
-      limit={limit}
-      pageCount={pageCount}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      setPagination={setPagination}
+      pageCount={
+        userData ? Math.ceil(Number(userData.data.totalRows) / pageSize) : -1
+      }
     >
       <DialogLayout open={open} setOpen={setOpen} buttonLabel="Add" icon={true}>
         <AddEditUserDialog

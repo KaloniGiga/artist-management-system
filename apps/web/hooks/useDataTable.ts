@@ -4,7 +4,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -13,8 +13,11 @@ interface DataTableProps<TData, TValue> {
 
 interface ITableMetaData {
   pageCount: number;
-  page: number;
-  limit: number;
+  pageIndex: number;
+  pageSize: number;
+  setPagination: Dispatch<
+    SetStateAction<{ pageIndex: number; pageSize: number }>
+  >;
 }
 
 type TableLayoutProps<TData, TValue> = DataTableProps<TData, TValue> &
@@ -24,14 +27,10 @@ export default function useDataTables<TData, TValue>({
   data,
   columns,
   pageCount,
-  page,
-  limit,
+  pageIndex,
+  pageSize,
+  setPagination,
 }: TableLayoutProps<TData, TValue>) {
-  const [{ pageIndex, pageSize }] = useState({
-    pageIndex: page - 1,
-    pageSize: limit,
-  });
-
   const pagination = useMemo(
     () => ({
       pageIndex,
@@ -47,6 +46,7 @@ export default function useDataTables<TData, TValue>({
     state: {
       pagination,
     },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,

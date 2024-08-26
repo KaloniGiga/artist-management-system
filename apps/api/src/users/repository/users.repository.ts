@@ -19,7 +19,7 @@ class UsersRepository {
   async getTotalRows() {
     const databaseResponse = await this.databaseService.runQuery(`
       SELECT COUNT(*) as totalRowsCount FROM users`);
-    return databaseResponse.rows;
+    return databaseResponse.rows[0].totalrowscount;
   }
 
   async getUserById(id: number) {
