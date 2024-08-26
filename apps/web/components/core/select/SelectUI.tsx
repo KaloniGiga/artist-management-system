@@ -28,29 +28,35 @@ export default function SelectUI<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Select
-            disabled={disabled}
-            onValueChange={field.onChange}
-            value={field.value}
-          >
-            <SelectTrigger className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none">
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {selectItem.map((item) => {
-                return (
-                  <SelectItem key={item.value} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-        </FormItem>
-      )}
+      render={({ field }) => {
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <Select
+              disabled={disabled}
+              value={field.value?.toString()}
+              onValueChange={(value) => {
+                if (value) {
+                  field.onChange(value);
+                }
+              }}
+            >
+              <SelectTrigger className="h-10 text-md border-foreground border-opacity-0 focus-visible:border-none">
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+              <SelectContent>
+                {selectItem.map((item) => {
+                  return (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </FormItem>
+        );
+      }}
     />
   );
 }

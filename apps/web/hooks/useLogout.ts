@@ -3,6 +3,7 @@ import { useLogoutMutation } from "@web/redux/auth/auth.api";
 import { setLogout } from "@web/redux/auth/auth.slice";
 import { useAppDispatch } from "@web/redux/hooks";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function useLogout() {
   const router = useRouter();
@@ -13,11 +14,10 @@ export default function useLogout() {
       .unwrap()
       .then(() => {
         dispatch(setLogout());
-        router.replace("/auth");
+        router.replace("/");
       })
       .catch(() => {
-        dispatch(setLogout());
-        router.replace("/auth");
+        toast.error("Failed to logout");
       });
   };
 

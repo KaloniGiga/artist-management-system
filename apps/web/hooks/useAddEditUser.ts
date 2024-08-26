@@ -1,10 +1,13 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { extractMessageFromError } from "@web/lib/utils";
+import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
 import {
   usePostUserMutation,
   usePutUserMutation,
 } from "@web/redux/user/user.api";
 import { GenderEnum, RoleEnum, UserData } from "@web/types/types";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import validator from "validator";
@@ -16,34 +19,42 @@ interface Props {
   handleDialogClose: () => void;
 }
 
-const formSchema = z.object({
-  first_name: z.string().min(1, { message: "First name is required" }),
-  last_name: z.string().min(1, { message: "Last name is required" }),
-  email: z
-    .string()
-    .min(1, { message: "Email is required" })
-    .email("Email is invalid."),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
-  phone: z.string().refine(validator.isMobilePhone),
-  dob: z.date({
-    required_error: "A date of birth is required.",
-  }),
-  gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
-  role_type: z.enum([
-    RoleEnum.SUPERADMIN,
-    RoleEnum.ARTISTMANAGER,
-    RoleEnum.ARTIST,
-  ]),
-  address: z.string(),
-});
+const formSchema = z
+  .object({
+    first_name: z.string().min(1, { message: "First name is required" }),
+    last_name: z.string().min(1, { message: "Last name is required" }),
+    email: z
+      .string()
+      .min(1, { message: "Email is required" })
+      .email("Email is invalid."),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters.",
+    }),
+    phone: z.string().refine(validator.isMobilePhone),
+    dob: z.date({
+      required_error: "A date of birth is required.",
+    }),
+    gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
+    role_type: z.enum([
+      RoleEnum.SUPERADMIN,
+      RoleEnum.ARTISTMANAGER,
+      RoleEnum.ARTIST,
+    ]),
+    artistId: z.coerce.number().optional(),
+    address: z.string(),
+  })
+  .refine((data) => !(data.role_type == RoleEnum.ARTIST && !data.artistId), {
+    message: "ArtistId is required for Role Artist",
+    path: ["artistId"],
+  });
 
 export default function useAddEditUser({
   isEdit,
   editData,
   handleDialogClose,
 }: Props) {
+  // todo: make the artist query able to fetch all the data without pagination
+  const { data: artistsData } = useGetArtistsQuery({ page: 0, limit: 10 });
   const [postUser, { isLoading: postLoading }] = usePostUserMutation();
   const [putUser, { isLoading: putLoading }] = usePutUserMutation();
 
@@ -51,7 +62,26 @@ export default function useAddEditUser({
     resolver: zodResolver(formSchema),
   });
 
+  const watchRole = form.watch("role_type");
+
+  useEffect(() => {
+    console.log(editData);
+    form.reset();
+    if (isEdit && editData) {
+      form.setValue("first_name", editData.first_name);
+      form.setValue("last_name", editData.last_name);
+      form.setValue("email", editData.email);
+      form.setValue("dob", new Date(editData.dob));
+      form.setValue("gender", editData.gender);
+      form.setValue("phone", editData.phone);
+      form.setValue("role_type", editData.role_type);
+      form.setValue("artistId", editData.artistId);
+      form.setValue("address", editData.address);
+    }
+  }, [isEdit, editData]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
     if (isEdit && editData) {
       putUser({ id: editData.id, userDetails: values })
         .unwrap()
@@ -59,7 +89,8 @@ export default function useAddEditUser({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to update user.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to update user.");
         });
     } else {
       postUser(values)
@@ -68,7 +99,8 @@ export default function useAddEditUser({
           handleDialogClose();
         })
         .catch((error) => {
-          toast.error(error.message ? error.message : "Failed to add user.");
+          const errMsg = extractMessageFromError(error);
+          toast.error(errMsg ? errMsg : "Failed to add user.");
         });
     }
   };
@@ -79,5 +111,7 @@ export default function useAddEditUser({
     onSubmit,
     formSchema,
     form,
+    watchRole,
+    artistsData,
   };
 }

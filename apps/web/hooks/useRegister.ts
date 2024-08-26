@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { extractMessageFromError } from "@web/lib/utils";
 import { useRegisterUserMutation } from "@web/redux/auth/auth.api";
 import { GenderEnum, RoleEnum } from "@web/types/types";
 import { useRouter } from "next/navigation";
@@ -23,11 +24,9 @@ const formSchema = z.object({
     required_error: "A date of birth is required.",
   }),
   gender: z.enum([GenderEnum.FEMALE, GenderEnum.MALE, GenderEnum.OTHER]),
-  role_type: z.enum([
-    RoleEnum.SUPERADMIN,
-    RoleEnum.ARTISTMANAGER,
-    RoleEnum.ARTIST,
-  ]),
+  role_type: z
+    .enum([RoleEnum.SUPERADMIN, RoleEnum.ARTISTMANAGER, RoleEnum.ARTIST])
+    .default(RoleEnum.SUPERADMIN),
   address: z.string(),
 });
 
@@ -35,19 +34,22 @@ export default function useRegister() {
   const router = useRouter();
   const [register, { isLoading }] = useRegisterUserMutation();
 
+  // the default role for user registration is super admin
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: { role_type: RoleEnum.SUPERADMIN },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     register(values)
       .unwrap()
       .then(() => {
-        // dispatch(setAuth());
+        toast.success("Registration successful.");
         router.push("/");
       })
-      .catch(() => {
-        toast.error("Failed to log in");
+      .catch((error) => {
+        const errMsg = extractMessageFromError(error);
+        toast.error(errMsg ? errMsg : "Failed to register");
       });
   };
 

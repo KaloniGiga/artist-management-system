@@ -1,5 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { forwardRoute } from "@web/lib/access-routes";
+import { extractMessageFromError } from "@web/lib/utils";
 import { useReadLoginMutation } from "@web/redux/auth/auth.api";
 import { setAuth } from "@web/redux/auth/auth.slice";
 import { useAppDispatch } from "@web/redux/hooks";
@@ -29,12 +31,29 @@ export default function useLogin() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     login(values)
       .unwrap()
-      .then(() => {
-        dispatch(setAuth());
-        router.push("/dashboard");
+      .then((data) => {
+        dispatch(setAuth(data.data));
+        // superadmin and aritst manager roles will return string and
+        // artist role will return function which constructs new route with artistId
+        console.log(data);
+        const forwardToRouteOrFunction = forwardRoute[data.data.role_type];
+        const targetRoute =
+          typeof forwardToRouteOrFunction == "string"
+            ? forwardToRouteOrFunction
+            : forwardToRouteOrFunction(
+                data.data.artistId ? data.data.artistId : null,
+              );
+        console.log(targetRoute);
+        // if user with artist role has no valid artist id, show message;
+        if (targetRoute == "/") {
+          toast.error("Invalid credentails");
+          return;
+        }
+        router.push(targetRoute);
       })
-      .catch(() => {
-        toast.error("Failed to log in");
+      .catch((error) => {
+        const errMsg = extractMessageFromError(error);
+        toast.error(errMsg ? errMsg : "Failed to log in");
       });
   };
 

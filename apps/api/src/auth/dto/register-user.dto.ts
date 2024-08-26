@@ -1,5 +1,8 @@
+import { OmitType } from "@nestjs/swagger";
 import UserDto from "@server/users/dto/user.dto";
 
-class RegisterUserDto extends UserDto {}
+export default class RegisterUserDto extends OmitType(UserDto, [
+  "artistId",
+] as const) {}
 
-export default RegisterUserDto;
+// export default RegisterUserDto;

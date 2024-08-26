@@ -15,7 +15,11 @@ class SongsService {
     private readonly artistService: ArtistService,
   ) {}
 
-  async getSongsByArtistId(artistId: number, page: number, limit: number) {
+  async getSongsByArtistId(
+    artistId: number,
+    page: number = 0,
+    limit: number = 10,
+  ) {
     try {
       return await this.songsRepository.getSongsByArtistId(
         artistId,
@@ -39,7 +43,7 @@ class SongsService {
       // check if artistId is valid.
       const targetArtist = await this.artistService.getArtistById(artistId);
       if (!targetArtist) {
-        throw new NotFoundException();
+        throw new NotFoundException("Invalid Artist");
       }
       // check if the tilte is uniques\
       return await this.songsRepository.create(songData, artistId);
@@ -58,7 +62,7 @@ class SongsService {
         songData.artistId,
       );
       if (!targetArtist) {
-        throw new NotFoundException();
+        throw new NotFoundException("Invalid Artist");
       }
 
       // check if title is unique.

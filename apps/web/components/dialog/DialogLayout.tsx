@@ -1,9 +1,5 @@
 import { Button } from "@web/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@web/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@web/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
@@ -30,9 +26,7 @@ export default function DialogLayout({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="overflow-y-scroll max-h-screen">
-        {children}
-      </DialogContent>
+      {children}
     </Dialog>
   );
 }

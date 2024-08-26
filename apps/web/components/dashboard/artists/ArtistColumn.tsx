@@ -1,7 +1,9 @@
 "use client";
-import { ArtistData } from "@web/types/types";
+import { ArtistData, GenderEnum } from "@web/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { EditDeleteArtistOptions } from "./EditDeleteArtistOption";
+import { genderLabel } from "@web/lib/constant";
+import Link from "next/link";
 
 export const artistColumns: ColumnDef<ArtistData>[] = [
   {
@@ -15,6 +17,10 @@ export const artistColumns: ColumnDef<ArtistData>[] = [
   {
     accessorKey: "gender",
     header: "gender",
+    cell: ({ getValue }) => {
+      const value = getValue<GenderEnum>();
+      return <div>{genderLabel[value]}</div>;
+    },
   },
   {
     accessorKey: "first_release_year",
@@ -29,7 +35,19 @@ export const artistColumns: ColumnDef<ArtistData>[] = [
     cell: ({ row }) => {
       const artist = row.original;
 
-      return <EditDeleteArtistOptions rowData={artist} />;
+      return (
+        <div className="flex gap-4 items-center justify-center">
+          <div>
+            <Link
+              className="hover:text-[blue]"
+              href={`/dashboard/songs/${artist.id}`}
+            >
+              View Songs
+            </Link>
+          </div>
+          <EditDeleteArtistOptions rowData={artist} />
+        </div>
+      );
     },
   },
 ];

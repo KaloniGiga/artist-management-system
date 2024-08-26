@@ -9,6 +9,7 @@ export interface User {
   gender: GenderEnum;
   role_type: RoleEnum;
   address: string;
+  artistId?: number;
 }
 
 export interface UserData extends User {
@@ -32,11 +33,12 @@ export interface Song {
   title: string;
   album_name: string;
   genre: GenreEnum;
-  authorId?: number;
+  artistId?: number;
 }
 
 export interface SongData extends Song {
   id: number;
+  artistId: number;
 }
 
 export interface LoginData {

@@ -35,10 +35,10 @@ export const songApi = baseApi.injectEndpoints({
     }),
     getSongs: builder.query<
       SongQueryResponse,
-      { authorId: number; page: number; limit: number }
+      { artistId: number; page: number; limit: number }
     >({
-      query: ({ authorId, page, limit }) => ({
-        url: `v1/songs/${authorId}?page=${page}&limit=${limit}`,
+      query: ({ artistId, page, limit }) => ({
+        url: `v1/songs/artist/${artistId}?page=${page}&limit=${limit}`,
         method: "GET",
       }),
       providesTags: ["Song"],

@@ -5,7 +5,7 @@ import InputUI from "../core/input/InputUI";
 import SelectUI from "../core/select/SelectUI";
 import useRegister from "@web/hooks/useRegister";
 import { DatePicker } from "../core/date-picker/DatePicker";
-import { selectGenderList, selectUserRoleList } from "@web/lib/constant";
+import { selectGenderList } from "@web/lib/constant";
 
 export default function RegisterForm() {
   const { formSchema, isLoading, onSubmit, form } = useRegister();
@@ -52,6 +52,7 @@ export default function RegisterForm() {
         label="Enter Password"
         disabled={isLoading}
         placeholder="password"
+        type="password"
       />
 
       <InputUI
@@ -73,18 +74,18 @@ export default function RegisterForm() {
         control={form.control}
         name="gender"
         label={"Enter Gender"}
-        placeholder="Male"
+        placeholder=""
         disabled={isLoading}
         selectItem={selectGenderList}
       />
-      <SelectUI
+      {/* <SelectUI
         control={form.control}
         name="role_type"
         label={"Enter Role"}
-        placeholder="Super admin"
+        placeholder=""
         disabled={isLoading}
         selectItem={selectUserRoleList}
-      />
+      /> */}
 
       <InputUI
         control={form.control}

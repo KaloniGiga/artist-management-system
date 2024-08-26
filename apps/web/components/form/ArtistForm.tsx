@@ -5,6 +5,7 @@ import SelectUI from "../core/select/SelectUI";
 import { DatePicker } from "../core/date-picker/DatePicker";
 import useAddEditArtist from "@web/hooks/useAddEditArtist";
 import { ArtistData } from "@web/types/types";
+import { selectGenderList } from "@web/lib/constant";
 
 interface IArtistForm {
   isEdit: boolean;
@@ -47,7 +48,7 @@ export default function ArtistForm({
         label={"Enter Gender"}
         placeholder="Male"
         disabled={postLoading || putLoading}
-        selectItem={[]}
+        selectItem={selectGenderList}
       />
 
       <InputUI
