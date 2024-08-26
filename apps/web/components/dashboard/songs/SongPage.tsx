@@ -11,18 +11,21 @@ import { AddEditSongDialog } from "../../dialog/AddEditSongDialog";
 import { useGetSongsQuery } from "@web/redux/song/song.api";
 import { useState } from "react";
 import { useGetUserQuery } from "@web/redux/auth/auth.api";
+import { useAppSelector } from "@web/redux/hooks";
 
 export function SongPage() {
   const params = useParams();
-  const { data: userData } = useGetUserQuery();
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const [{ pageIndex, pageSize }, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [open, setOpen] = useState(false);
   const artistId = Number(params.artistId as unknown as string);
   const { isLoading, data: songData } = useGetSongsQuery({
     artistId: artistId,
-    limit: limit,
-    page: page,
+    limit: pageSize,
+    page: pageIndex,
   });
 
   const handleDialogClose = () => {
@@ -33,11 +36,17 @@ export function SongPage() {
     <TableLayout
       title={"Songs List"}
       description={"This table contains the list of songs of artist."}
-      data={songData ? songData.data : []}
+      data={songData ? songData.data.songs : []}
       columns={songColumns}
       loading={isLoading}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      setPagination={setPagination}
+      pageCount={
+        songData ? Math.ceil(Number(songData.data.totalRows) / pageSize) : -1
+      }
     >
-      {userData?.data.role_type !== RoleEnum.ARTISTMANAGER && (
+      {userInfo?.role_type !== RoleEnum.ARTISTMANAGER && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="ml-auto gap-1">

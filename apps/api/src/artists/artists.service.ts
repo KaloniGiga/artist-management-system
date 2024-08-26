@@ -13,7 +13,9 @@ class ArtistService {
 
   async getAllArtist(page: number, limit: number) {
     try {
-      return await this.artistsRepository.getAllArtists(page, limit);
+      const artists = await this.artistsRepository.getAllArtists(page, limit);
+      const totalRows = await this.artistsRepository.getTotalRows();
+      return { totalRows, artists };
     } catch (error) {
       throw new HttpException(
         "Something went wrong",

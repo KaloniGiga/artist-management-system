@@ -21,11 +21,13 @@ class SongsService {
     limit: number = 10,
   ) {
     try {
-      return await this.songsRepository.getSongsByArtistId(
+      const songs = await this.songsRepository.getSongsByArtistId(
         artistId,
         page,
         limit,
       );
+      const totalRows = await this.songsRepository.getTotalRows(artistId);
+      return { totalRows, songs };
     } catch (error) {
       throw new HttpException(
         "Something went wrong",

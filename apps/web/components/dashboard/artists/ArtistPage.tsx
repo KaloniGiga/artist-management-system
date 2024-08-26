@@ -8,12 +8,14 @@ import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
 import DialogLayout from "../../dialog/DialogLayout";
 
 export function ArtistPage() {
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [{ pageIndex, pageSize }, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [open, setOpen] = useState(false);
   const { isLoading, data: artistData } = useGetArtistsQuery({
-    limit: limit,
-    page: page,
+    page: pageIndex,
+    limit: pageSize,
   });
 
   const handleDialogClose = () => {
@@ -24,9 +26,17 @@ export function ArtistPage() {
     <TableLayout
       title={"Artist Table"}
       description={"This table contains list of all the aritst"}
-      data={artistData ? artistData.data : []}
+      data={artistData ? artistData.data.artists : []}
       columns={artistColumns}
       loading={isLoading}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      setPagination={setPagination}
+      pageCount={
+        artistData
+          ? Math.ceil(Number(artistData.data.totalRows) / pageSize)
+          : -1
+      }
     >
       <DialogLayout open={open} setOpen={setOpen} buttonLabel="Add" icon={true}>
         <AddEditArtistDialog
