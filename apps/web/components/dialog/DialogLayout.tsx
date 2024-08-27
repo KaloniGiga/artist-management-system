@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 interface IDialogLayout {
   open: boolean;
   handleOpenChange: (value: boolean) => void;
-  handleAddClick: () => void;
+  handleAddClick?: () => void;
   buttonLabel: string;
   icon: boolean;
   children: ReactNode;

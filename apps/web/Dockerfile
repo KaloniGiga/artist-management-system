@@ -55,6 +55,6 @@ WORKDIR /usr/src/app/apps/web
 
 EXPOSE 3000
 
-ENTRYPOINT [ "pnpm", "start" ]
+# ENTRYPOINT [ "pnpm", "start" ]
 
 USER node
