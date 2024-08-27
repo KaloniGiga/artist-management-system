@@ -3,7 +3,7 @@
 <h1 align="center">Artist Management System</h1>
 
 ![](https://img.shields.io/badge/contributors-1-white)
-![](https://img.shields.io/badge/commits-93-white)
+![](https://img.shields.io/badge/commits-95-white)
 ![](https://img.shields.io/badge/open%20source-true-brightgreen)
 
 </div>
@@ -80,18 +80,19 @@ pnpm install
 3. Starting the Production environment:
 
    For frontend:
+
    Create a .env.production inside apps/web
    Copy the .env.sample from apps/web into .env.production
    Tweak the parameters as per requirement.
 
-   ``bash
+   ```bash
    #build the project
    pnpm --filter web build
 
    #start the project
    pnpm --filter web start
 
-   ``
+   ```
 
    For backend:
 
@@ -99,14 +100,14 @@ pnpm install
    Copy the .env.sample from apps/api into .env.production
    Tweak the parameters as per requirement.
 
-   ``bash
+   ```bash
 
    #build the project
    pnpm --filter api build
 
    #start the project
    pnpm --filter api start
-   ``
+   ```
 
 4. Starting the Development Environment
 
@@ -142,37 +143,37 @@ pnpm dev
 
 You can use any cloud database instance like neondb. If you are using local postgres database make sure to comment out below code in apps/api/src/database/database.module.ts and apps/api/src/database/knexfile.ts
 
-`bash
+```bash
           ssl: {
             rejectUnauthorized: false,
           },
-`
+```
 
 ### Run migration to synchronize with your database
 
-`bash
+```bash
     pnpm knex migrate:latest --knexfile ./apps/api/src/database/knexfile.ts
-`
+```
 
 ## Rollback database migration
 
-`bash
+```bash
     pnpm knex migrate:latest --knexfile ./apps/api/src/database/knexfile.ts
-`
+```
 
 ### Seed your database with users
 
-`bash
+```bash
     pnpm knex seed:run --knexfile ./apps/api/src/database/knexfile.ts
-`
+```
 
-### Using Docker (WIP)
+### Using Docker (Work in progress)
 
 Check the docker.env file for required env variables
 
 Make changes in frontend and backend env variables (as necessary)
 
-If you are using docker version less than 25, make sure the you have version
+If you are using docker version less than 25, make sure that you have version in docker compose file
 
 You can user docker to start the application the application in dev mode
 
