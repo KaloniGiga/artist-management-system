@@ -36,7 +36,7 @@ services:
       dockerfile: ./apps/api/Dockerfile
       target: development
     volumes:
-      # - backend_global_nm:/usr/src/app/node_modules
+      - backend_global_nm:/usr/src/app/node_modules
       - bakcend_local_nm:/usr/src/app/apps/api/node_modules
     env_file:
       - apps/api/.env.development
@@ -56,7 +56,7 @@ services:
       target: development
     container_name: web
     volumes:
-      # - frontend_global_nm:/usr/src/app/node_modules
+      - frontend_global_nm:/usr/src/app/node_modules
       - frontend_local_nm:/usr/src/app/apps/web/node_modules
     env_file:
       - apps/web/.env.local
@@ -70,9 +70,9 @@ volumes:
   postgres-data:
     driver: local
   pgadmin:
-  # backend_global_nm:
+  backend_global_nm:
   bakcend_local_nm:
-  # frontend_global_nm:
+  frontend_global_nm:
   frontend_local_nm:
 
 networks:

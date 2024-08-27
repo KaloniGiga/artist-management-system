@@ -3,8 +3,10 @@
 <h1 align="center">Artist Management System</h1>
 
 ![](https://img.shields.io/badge/contributors-1-white)
-![](https://img.shields.io/badge/commits-93-white)
+![](https://img.shields.io/badge/commits-96-white)
 ![](https://img.shields.io/badge/open%20source-true-brightgreen)
+
+</div>
 
 ## Table of Contents
 
@@ -12,16 +14,15 @@
 - [Features](#features)
 - [Technologies](#technologies)
 - [Quickstart](#quickstart)
-- [Documentation](#documentation)
 
 ### Introduction
 
 The Artist Management System allows users to manage artists and songs records. The backend is built with NestJS, providing a robust API, while the frontend uses Next.js to deliver a modern, responsive user interface.
 
-### Feature
+### Features
 
 - login and registration
-- Role based access contorl
+- Role based access control
   - users can have three types of role (super_admin, artist_manager, artist)
   - registered users have a default role of super_admin
   - super_admin has access to all the features.
@@ -48,7 +49,7 @@ The Artist Management System allows users to manage artists and songs records. T
 - docker for containarization
 - Tailwind for styling.
 
-### Quikc Start
+### Quickstart
 
 #### Prerequisties
 
@@ -77,36 +78,41 @@ pnpm install
 
 3. Starting the Production environment:
 
-   For frontend:
+   #### For frontend:
+
    Create a .env.production inside apps/web
+
    Copy the .env.sample from apps/web into .env.production
+
    Tweak the parameters as per requirement.
 
-   ``bash
+   ```bash
    #build the project
    pnpm --filter web build
 
    #start the project
    pnpm --filter web start
 
-   ``
+   ```
 
-   For backend:
+   #### For backend:
 
    Create a .env.production inside apps/api
+
    Copy the .env.sample from apps/api into .env.production
+
    Tweak the parameters as per requirement.
 
-   ``bash
+   ```bash
 
    #build the project
    pnpm --filter api build
 
    #start the project
    pnpm --filter api start
-   ``
+   ```
 
-4. Starting the Development Environment
+4. [Starting the Development Environment]
 
 Copy the .env.sample file and create one more file .env.development apps/api folder
 
@@ -122,7 +128,7 @@ pnpm dev:api
 
 ```
 
-- Start the frontend
+- [Start the frontend]
 
 ```bash
 pnpm --filter web dev
@@ -140,37 +146,37 @@ pnpm dev
 
 You can use any cloud database instance like neondb. If you are using local postgres database make sure to comment out below code in apps/api/src/database/database.module.ts and apps/api/src/database/knexfile.ts
 
-`bash
+```bash
           ssl: {
             rejectUnauthorized: false,
-          },
-`
+          }
+```
 
 ### Run migration to synchronize with your database
 
-`bash
+```bash
     pnpm knex migrate:latest --knexfile ./apps/api/src/database/knexfile.ts
-`
+```
 
 ## Rollback database migration
 
-`bash
+```bash
     pnpm knex migrate:latest --knexfile ./apps/api/src/database/knexfile.ts
-`
+```
 
 ### Seed your database with users
 
-`bash
+```bash
     pnpm knex seed:run --knexfile ./apps/api/src/database/knexfile.ts
-`
+```
 
-### Using Docker (WIP)
+### Using Docker (Work in progress)
 
 Check the docker.env file for required env variables
 
 Make changes in frontend and backend env variables (as necessary)
 
-If you are using docker version less than 25, make sure the you have version
+If you are using docker version less than 25, make sure that you have version in docker compose file
 
 You can user docker to start the application the application in dev mode
 
