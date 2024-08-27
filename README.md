@@ -1,20 +1,54 @@
-## Artist Management System
+<div align="center">
+ 
+<h1 align="center">Artist Management System</h1>
 
-This project is an artist management system built using a monorepo with pnpm workspaces. It includes a backend API developed with NestJS and a frontend application built with Next.js
+![](https://img.shields.io/badge/contributors-1-white)
+![](https://img.shields.io/badge/commits-93-white)
+![](https://img.shields.io/badge/open%20source-true-brightgreen)
 
-## Table of Content
+## Table of Contents
 
-- Project Overview
-- Getting Started
-- Development
-- Building and Running
-- Project Structure
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Quickstart](#quickstart)
+- [Documentation](#documentation)
 
-### Project Overview
+### Introduction
 
-The Artist Management System allows users to manage artist profiles, artworks, and exhibitions. The backend is built with NestJS, providing a robust API, while the frontend uses Next.js to deliver a modern, responsive user interface.
+The Artist Management System allows users to manage artists and songs records. The backend is built with NestJS, providing a robust API, while the frontend uses Next.js to deliver a modern, responsive user interface.
 
-### Getting Started
+### Feature
+
+- login and registration
+- Role based access contorl
+  - users can have three types of role (super_admin, artist_manager, artist)
+  - registered users have a default role of super_admin
+  - super_admin has access to all the features.
+  - artist_manager has access to Artist CRUD
+  - artist has access to his own Songs CRUD
+- super_admin can CRUD the user table and create other users with above roles.
+- Users created by super admin can login with their email and password.
+- user with role(artist_manager) can perform CRUD on Artist table and see Songs table of a artist.
+- user with role(artist) can perform CRUD in his own Songs table.
+- Artist table has export and import csv feature.
+- All three tables have pagination.
+- Logout.
+
+### Technologies
+
+- NestJS for robust backend.
+- React (Next.js) for frontend.
+- Postgres database
+- Redux Toolkit and RTK query for state management and data fetching
+- JWT token and passport for authentication (Only access token implemented)
+- Raw SQL for database querying.
+- Knex for managing seeds and migration
+- Radix UI and shadcn for UI library.
+- docker for containarization
+- Tailwind for styling.
+
+### Quikc Start
 
 #### Prerequisties
 
@@ -22,7 +56,7 @@ The Artist Management System allows users to manage artist profiles, artworks, a
 - pnpm (v9 or higher)
 - Docker and Docker compose (Optional)
 
-#### Installation
+####
 
 1. Clone the repository
 
@@ -34,30 +68,65 @@ cd artist-management-system
 2. Install the dependency
 
 ```bash
-pnpm install
 
 npm install -g pnpm # if pnpm is not present
+
+pnpm install
+
 ```
 
-3. Add the environment variables
-   Copy the .env.sample file and create two more file .env
+3. Starting the Production environment:
+
+   For frontend:
+   Create a .env.production inside apps/web
+   Copy the .env.sample from apps/web into .env.production
+   Tweak the parameters as per requirement.
+
+   ``bash
+   #build the project
+   pnpm --filter web build
+
+   #start the project
+   pnpm --filter web start
+
+   ``
+
+   For backend:
+
+   Create a .env.production inside apps/api
+   Copy the .env.sample from apps/api into .env.production
+   Tweak the parameters as per requirement.
+
+   ``bash
+
+   #build the project
+   pnpm --filter api build
+
+   #start the project
+   pnpm --filter api start
+   ``
+
 4. Starting the Development Environment
 
-- Edit .env variables inside apps/api and apps/web
+Copy the .env.sample file and create one more file .env.development apps/api folder
 
-Copy the .env.sample file and create two more file .env.development and .env.production in apps/api folder
-
-Similarly, Copy the .env.sample file and create two more file .env.local and .env.production in apps/web folder
+Similarly, Copy the .env.sample file ans create one more file .env.local in apps/web folder
 
 - Start the backend
 
 ```bash
+
+pnpm -filter api dev
+or
 pnpm dev:api
+
 ```
 
 - Start the frontend
 
 ```bash
+pnpm --filter web dev
+or
 pnpm dev:web
 ```
 
@@ -67,9 +136,43 @@ pnpm dev:web
 pnpm dev
 ```
 
-### Using Docker
+# Database
 
-You can also user docker to start the application the application in dev mode
+You can use any cloud database instance like neondb. If you are using local postgres database make sure to comment out below code in apps/api/src/database/database.module.ts and apps/api/src/database/knexfile.ts
+
+`bash
+          ssl: {
+            rejectUnauthorized: false,
+          },
+`
+
+### Run migration to synchronize with your database
+
+`bash
+    pnpm knex migrate:latest --knexfile ./apps/api/src/database/knexfile.ts
+`
+
+## Rollback database migration
+
+`bash
+    pnpm knex migrate:latest --knexfile ./apps/api/src/database/knexfile.ts
+`
+
+### Seed your database with users
+
+`bash
+    pnpm knex seed:run --knexfile ./apps/api/src/database/knexfile.ts
+`
+
+### Using Docker (WIP)
+
+Check the docker.env file for required env variables
+
+Make changes in frontend and backend env variables (as necessary)
+
+If you are using docker version less than 25, make sure the you have version
+
+You can user docker to start the application the application in dev mode
 
 ```bash
 docker compose up
