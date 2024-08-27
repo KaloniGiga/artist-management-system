@@ -6,6 +6,8 @@
 ![](https://img.shields.io/badge/commits-93-white)
 ![](https://img.shields.io/badge/open%20source-true-brightgreen)
 
+</div>
+
 ## Table of Contents
 
 - [Introduction](#introduction)
