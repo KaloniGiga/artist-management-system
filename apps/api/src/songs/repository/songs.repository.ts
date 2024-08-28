@@ -12,7 +12,7 @@ class SongsRepository {
   async getSongsByArtistId(artistId: number, page: number, limit: number) {
     const databaseRespoonse = await this.databaseService.runQuery(
       `
-         SELECT * FROM songs WHERE artist_id=$1 ORDER BY created_at ASC LIMIT $2 OFFSET $3
+         SELECT * FROM songs WHERE artist_id=$1 ORDER BY created_at DESC LIMIT $2 OFFSET $3
       `,
       [artistId, limit, page * limit],
     );

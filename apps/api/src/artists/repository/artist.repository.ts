@@ -11,7 +11,7 @@ class ArtistRepository {
 
   async getAllArtists(page: number, limit: number) {
     const databaseResponse = await this.databaseService.runQuery(
-      `SELECT * FROM artists ORDER BY created_at ASC LIMIT $1 OFFSET $2`,
+      `SELECT * FROM artists ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
       [limit, limit * page],
     );
 

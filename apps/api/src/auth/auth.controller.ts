@@ -33,7 +33,6 @@ export class AuthenticationController {
   @ApiBody({ type: LoginUserDto })
   async logIn(@Req() request: RequestWithUser) {
     const { user } = request;
-    console.log("user logged in.");
     const accessTokenCookie =
       this.authenticationService.getCookieWithJwtAccessToken(user.id);
 

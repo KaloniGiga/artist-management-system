@@ -66,7 +66,7 @@ class UsersService {
     try {
       const targetUser = await this.getUserById(id);
       if (!targetUser) {
-        throw new NotFoundException();
+        throw new NotFoundException("User not found.");
       }
 
       if (targetUser.email !== userData.email) {
@@ -94,7 +94,8 @@ class UsersService {
 
   async deleteUser(id: number) {
     try {
-      return this.usersRepository.delete(id);
+      await this.usersRepository.delete(id);
+      return { deletedUserId: id };
     } catch (error) {
       throw new HttpException(
         "Something went wrong",

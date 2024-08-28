@@ -99,6 +99,10 @@ export interface UserMutationResponse extends SuccessResponse {
   data: UserData;
 }
 
+export interface UserDeleteResponse extends SuccessResponse {
+  data: { deletedUserId: number };
+}
+
 export interface ArtistQueryResponse extends SuccessResponse {
   data: {
     totalRows: number;

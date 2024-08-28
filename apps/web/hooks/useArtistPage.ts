@@ -1,4 +1,5 @@
 import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
+import { setIsCSVImport } from "@web/redux/csv-import/csv-import.slice";
 import {
   setArtistDialogOpen,
   setArtistEditData,
@@ -30,6 +31,10 @@ export default function useArtistPage() {
     dispatch(setArtistEditData(null));
   };
 
+  const handleClearImport = () => {
+    dispatch(setIsCSVImport(false));
+  };
+
   return {
     isLoading,
     artistData,
@@ -41,5 +46,6 @@ export default function useArtistPage() {
     isCSVImport,
     setPagination,
     handleAddArtist,
+    handleClearImport,
   };
 }

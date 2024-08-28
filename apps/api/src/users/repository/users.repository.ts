@@ -10,7 +10,7 @@ class UsersRepository {
 
   async getAllUser(page: number, limit: number) {
     const databaseResponse = await this.databaseService.runQuery(
-      `SELECT * FROM users ORDER BY created_at ASC LIMIT $1 OFFSET $2`,
+      `SELECT * FROM users ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
       [limit, page * limit],
     );
     return plainToInstance(UserModel, databaseResponse.rows);
