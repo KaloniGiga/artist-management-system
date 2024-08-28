@@ -9,6 +9,7 @@ import {
   setOpenCsvImportDialog,
 } from "@web/redux/csv-import/csv-import.slice";
 import { ArtistData } from "@web/types/types";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   file: z.any(),
@@ -32,9 +33,11 @@ export function useCSVImport() {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
-          console.log(results);
           dispatch(setCSVData(results.data as ArtistData[]));
           dispatch(setIsCSVImport(true));
+        },
+        error: (error) => {
+          toast.error(error.message ? error.message : "Invalid CSV data.");
         },
       });
     }

@@ -19,6 +19,7 @@ export default function useDeleteArtist({ rowId, rowData }: IDeleteArtist) {
   const dispatch = useAppDispatch();
   const { openDialog } = useAppSelector((state) => state.artistDialog);
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const { isCSVImport } = useAppSelector((state) => state.importCSV);
 
   const [deleteArtist, { isLoading }] = useDeleteArtistMutation();
 
@@ -59,5 +60,6 @@ export default function useDeleteArtist({ rowId, rowData }: IDeleteArtist) {
     handleConfirmDelete,
     handleEditArtist,
     handleDeleteArtist,
+    isCSVImport,
   };
 }

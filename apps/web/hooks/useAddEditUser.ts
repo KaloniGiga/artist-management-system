@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { extractMessageFromError } from "@web/lib/utils";
 import { useGetArtistsQuery } from "@web/redux/artist/artist.api";
+import { setLogout } from "@web/redux/auth/auth.slice";
 import { setUserDialogOpen } from "@web/redux/dialog/user-dialog.slice";
 import { useAppDispatch, useAppSelector } from "@web/redux/hooks";
 import {
@@ -47,6 +48,7 @@ const formSchema = z
 export default function useAddEditUser() {
   // todo: make the artist query able to fetch all the data without pagination
   const dispatch = useAppDispatch();
+  const { userInfo } = useAppSelector((state) => state.auth);
   const { isEdit, editData } = useAppSelector((state) => state.userDialog);
   const { data: artistsData } = useGetArtistsQuery({ page: 0, limit: 10 });
   const [postUser, { isLoading: postLoading }] = usePostUserMutation();
@@ -78,8 +80,15 @@ export default function useAddEditUser() {
     if (isEdit && editData) {
       putUser({ id: editData.id, userDetails: values })
         .unwrap()
-        .then(() => {
+        .then((result) => {
           dispatch(setUserDialogOpen(false));
+          // if the super admin has changed his role
+          if (
+            userInfo?.id == result.data.id &&
+            userInfo?.role_type !== result.data.role_type
+          ) {
+            dispatch(setLogout());
+          }
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);

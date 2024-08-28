@@ -14,20 +14,28 @@ export function EditDeleteArtistOptions({ rowData }: IEditDeleteArtistOptions) {
     handleEditArtist,
     handleDeleteArtist,
     handleConfirmDelete,
+    isCSVImport,
   } = useDeleteArtist({ rowId: rowData?.id, rowData: rowData });
+
   return (
-    <ActionDropdown
-      open={deleteDialog}
-      handleDeleteDialog={setDeleteDialog}
-      handleEditClick={handleEditArtist}
-      handleDeleteClick={handleDeleteArtist}
-    >
-      <DeleteDialog
-        titleKey={"artist"}
-        handleDeleteDialog={setDeleteDialog}
-        handleConfirmDelete={handleConfirmDelete}
-        loading={isLoading}
-      />
-    </ActionDropdown>
+    <>
+      {!isCSVImport ? (
+        <ActionDropdown
+          open={deleteDialog}
+          handleDeleteDialog={setDeleteDialog}
+          handleEditClick={handleEditArtist}
+          handleDeleteClick={handleDeleteArtist}
+        >
+          <DeleteDialog
+            titleKey={"artist"}
+            handleDeleteDialog={setDeleteDialog}
+            handleConfirmDelete={handleConfirmDelete}
+            loading={isLoading}
+          />
+        </ActionDropdown>
+      ) : (
+        <div></div>
+      )}
+    </>
   );
 }
