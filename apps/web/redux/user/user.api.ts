@@ -1,5 +1,6 @@
 import {
   User,
+  UserDeleteResponse,
   UserMutationResponse,
   UserQueryResponse,
 } from "@web/types/types";
@@ -26,7 +27,7 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    deleteUser: builder.mutation<UserMutationResponse, number>({
+    deleteUser: builder.mutation<UserDeleteResponse, number>({
       query: (id) => ({
         url: `v1/users/${id}`,
         method: "DELETE",

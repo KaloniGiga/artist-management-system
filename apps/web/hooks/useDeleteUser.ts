@@ -1,5 +1,6 @@
 "use client";
 import { extractMessageFromError } from "@web/lib/utils";
+import { setLogout } from "@web/redux/auth/auth.slice";
 import {
   setUserDialogOpen,
   setUserEditData,
@@ -17,6 +18,7 @@ interface IDeleteUser {
 }
 export default function useDeleteUser({ rowId, rowData }: IDeleteUser) {
   const dispatch = useAppDispatch();
+  const { userInfo } = useAppSelector((state) => state.auth);
   const { openDialog } = useAppSelector((state) => state.userDialog);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
@@ -40,8 +42,12 @@ export default function useDeleteUser({ rowId, rowData }: IDeleteUser) {
     if (rowId) {
       deleteUser(rowId)
         .unwrap()
-        .then(() => {
+        .then((result) => {
           setDeleteDialog(false);
+          // if the super admin has delete own accound
+          if (userInfo?.id == result.data?.deletedUserId) {
+            dispatch(setLogout());
+          }
         })
         .catch((error) => {
           const errMsg = extractMessageFromError(error);

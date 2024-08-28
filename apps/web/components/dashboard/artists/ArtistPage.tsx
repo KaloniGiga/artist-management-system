@@ -33,6 +33,7 @@ export function ArtistPage() {
     isCSVImport,
     csvData,
     setPagination,
+    handleClearImport,
   } = useArtistPage();
   const { handleExportCSV } = useCSVExport({
     artistData: artistData ? artistData.data.artists : null,
@@ -62,15 +63,21 @@ export function ArtistPage() {
       <div className="flex gap-x-4">
         <ExportCSV handleExportCSV={handleExportCSV} />
         <ImportCSV />
-        <DialogLayout
-          open={openDialog}
-          handleOpenChange={handleOpenDialog}
-          buttonLabel="Add"
-          icon={true}
-          handleAddClick={handleAddArtist}
-        >
-          <AddEditArtistDialog />
-        </DialogLayout>
+        {!isCSVImport ? (
+          <DialogLayout
+            open={openDialog}
+            handleOpenChange={handleOpenDialog}
+            buttonLabel="Add"
+            icon={true}
+            handleAddClick={handleAddArtist}
+          >
+            <AddEditArtistDialog />
+          </DialogLayout>
+        ) : (
+          <Button onClick={handleClearImport} size={"sm"}>
+            Clear
+          </Button>
+        )}
       </div>
     </TableLayout>
   );

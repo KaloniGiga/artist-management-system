@@ -35,9 +35,6 @@ services:
       context: .
       dockerfile: ./apps/api/Dockerfile
       target: development
-    volumes:
-      - backend_global_nm:/usr/src/app/node_modules
-      - bakcend_local_nm:/usr/src/app/apps/api/node_modules
     env_file:
       - apps/api/.env.development
     command: pnpm --filter api dev
@@ -55,9 +52,6 @@ services:
       dockerfile: ./apps/web/Dockerfile
       target: development
     container_name: web
-    volumes:
-      - frontend_global_nm:/usr/src/app/node_modules
-      - frontend_local_nm:/usr/src/app/apps/web/node_modules
     env_file:
       - apps/web/.env.local
     command: pnpm --filter web dev
@@ -70,10 +64,6 @@ volumes:
   postgres-data:
     driver: local
   pgadmin:
-  backend_global_nm:
-  bakcend_local_nm:
-  frontend_global_nm:
-  frontend_local_nm:
 
 networks:
   backend-network:
